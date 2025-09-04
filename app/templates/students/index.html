@@ -1,0 +1,115 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="mb-8">
+    <div class="flex justify-between items-center">
+        <h1 class="text-4xl font-bold text-gray-800">Students Management</h1>
+        <button onclick="showAddForm()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+            Add Student
+        </button>
+    </div>
+</div>
+
+<div class="bg-white rounded-lg shadow-md p-6">
+    <div class="overflow-x-auto">
+        <table class="min-w-full table-auto">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-4 py-2 text-left">Student ID</th>
+                    <th class="px-4 py-2 text-left">Name</th>
+                    <th class="px-4 py-2 text-left">Gender</th>
+                    <th class="px-4 py-2 text-left">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{if .students}}
+                {{range .students}}
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="px-4 py-2">{{.StudentID}}</td>
+                    <td class="px-4 py-2">{{.FirstName}} {{.LastName}}</td>
+                    <td class="px-4 py-2">{{if .Gender}}{{.Gender}}{{else}}-{{end}}</td>
+                    <td class="px-4 py-2">
+                        <span class="px-2 py-1 text-xs rounded-full {{if .IsActive}}bg-green-100 text-green-800{{else}}bg-red-100 text-red-800{{end}}">
+                            {{if .IsActive}}Active{{else}}Inactive{{end}}
+                        </span>
+                    </td>
+                </tr>
+                {{end}}
+                {{else}}
+                <tr>
+                    <td colspan="4" class="px-4 py-8 text-center text-gray-500">No students found</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Student Modal -->
+<div id="addModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="bg-white p-6 rounded-lg w-96">
+            <h2 class="text-xl font-bold mb-4">Add New Student</h2>
+            <form id="addStudentForm">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Student ID</label>
+                    <input type="text" name="student_id" required class="w-full px-3 py-2 border rounded-md">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">First Name</label>
+                    <input type="text" name="first_name" required class="w-full px-3 py-2 border rounded-md">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Last Name</label>
+                    <input type="text" name="last_name" required class="w-full px-3 py-2 border rounded-md">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Gender</label>
+                    <select name="gender" class="w-full px-3 py-2 border rounded-md">
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="hideAddForm()" class="px-4 py-2 text-gray-600 border rounded-md">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">Add Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showAddForm() {
+        document.getElementById('addModal').classList.remove('hidden');
+    }
+
+    function hideAddForm() {
+        document.getElementById('addModal').classList.add('hidden');
+    }
+
+    document.getElementById('addStudentForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+
+        try {
+            const response = await fetch('/api/students', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                location.reload();
+            } else {
+                const error = await response.json();
+                alert(error.error || 'Failed to add student');
+            }
+        } catch (error) {
+            alert('Network error');
+        }
+    });
+</script>
+{{end}}

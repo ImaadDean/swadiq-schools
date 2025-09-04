@@ -1,0 +1,109 @@
+package database
+
+import (
+	"database/sql"
+	"swadiq-schools/app/models"
+	"time"
+)
+
+func GetUserByEmail(db *sql.DB, email string) (*models.User, error) {
+	user := &models.User{}
+	query := `SELECT id, email, password, first_name, last_name, role, is_active, created_at, updated_at 
+			  FROM users WHERE email = $1 AND is_active = true`
+	
+	err := db.QueryRow(query, email).Scan(
+		&user.ID, &user.Email, &user.Password, &user.FirstName, 
+		&user.LastName, &user.Role, &user.IsActive, &user.CreatedAt, &user.UpdatedAt,
+	)
+	
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func CreateSession(db *sql.DB, sessionID string, userID int, expiresAt time.Time) error {
+	query := `INSERT INTO sessions (id, user_id, expires_at, created_at) VALUES ($1, $2, $3, $4)`
+	_, err := db.Exec(query, sessionID, userID, expiresAt, time.Now())
+	return err
+}
+
+func GetSessionByID(db *sql.DB, sessionID string) (*models.Session, error) {
+	session := &models.Session{}
+	query := `SELECT id, user_id, expires_at, created_at FROM sessions WHERE id = $1 AND expires_at > NOW()`
+	
+	err := db.QueryRow(query, sessionID).Scan(
+		&session.ID, &session.UserID, &session.ExpiresAt, &session.CreatedAt,
+	)
+	
+	if err != nil {
+		return nil, err
+	}
+	return session, nil
+}
+
+func DeleteSession(db *sql.DB, sessionID string) error {
+	query := `DELETE FROM sessions WHERE id = $1`
+	_, err := db.Exec(query, sessionID)
+	return err
+}
+
+func UpdateUserPassword(db *sql.DB, userID int, hashedPassword string) error {
+	query := `UPDATE users SET password = $1, updated_at = NOW() WHERE id = $2`
+	_, err := db.Exec(query, hashedPassword, userID)
+	return err
+}
+
+func GetAllStudents(db *sql.DB) ([]models.Student, error) {
+	// Simple query first to check if table exists
+	query := `SELECT s.id, s.student_id, s.first_name, s.last_name, s.date_of_birth, 
+			  s.gender, s.address, s.parent_id, s.class_id, s.is_active, s.created_at, s.updated_at
+			  FROM students s 
+			  WHERE s.is_active = true ORDER BY s.created_at DESC`
+	
+	rows, err := db.Query(query)
+	if err != nil {
+		// Return empty slice if table doesn't exist
+		return []models.Student{}, nil
+	}
+	defer rows.Close()
+
+	var students []models.Student
+	for rows.Next() {
+		var student models.Student
+		
+		err := rows.Scan(
+			&student.ID, &student.StudentID, &student.FirstName, &student.LastName,
+			&student.DateOfBirth, &student.Gender, &student.Address, &student.ParentID,
+			&student.ClassID, &student.IsActive, &student.CreatedAt, &student.UpdatedAt,
+		)
+		if err != nil {
+			continue
+		}
+		
+		students = append(students, student)
+	}
+	return students, nil
+}
+
+func CreateParent(db *sql.DB, parent *models.Parent) error {
+	query := `INSERT INTO parents (first_name, last_name, phone, email, address) 
+			  VALUES ($1, $2, $3, $4, $5) RETURNING id, created_at, updated_at`
+	
+	err := db.QueryRow(query, parent.FirstName, parent.LastName,
+		parent.Phone, parent.Email, parent.Address).Scan(&parent.ID, &parent.CreatedAt, &parent.UpdatedAt)
+	
+	return err
+}
+
+func CreateStudent(db *sql.DB, student *models.Student) error {
+	query := `INSERT INTO students (student_id, first_name, last_name, date_of_birth, 
+			  gender, address, parent_id, class_id) 
+			  VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, created_at, updated_at`
+	
+	err := db.QueryRow(query, student.StudentID, student.FirstName, student.LastName,
+		student.DateOfBirth, student.Gender, student.Address, student.ParentID,
+		student.ClassID).Scan(&student.ID, &student.CreatedAt, &student.UpdatedAt)
+	
+	return err
+}
