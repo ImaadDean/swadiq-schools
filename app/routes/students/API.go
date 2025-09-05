@@ -67,14 +67,14 @@ func CreateStudentAPI(c *fiber.Ctx) error {
 		StudentID: req.StudentID,
 		FirstName: req.FirstName,
 		LastName:  req.LastName,
-		ParentID:  parentID,
 	}
 
 	if req.DateOfBirth != "" {
 		student.DateOfBirth = &req.DateOfBirth
 	}
 	if req.Gender != "" {
-		student.Gender = &req.Gender
+		gender := models.Gender(req.Gender)
+		student.Gender = &gender
 	}
 	if req.Address != "" {
 		student.Address = &req.Address
@@ -82,6 +82,13 @@ func CreateStudentAPI(c *fiber.Ctx) error {
 
 	if err := database.CreateStudent(config.GetDB(), student); err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to create student"})
+	}
+
+	// Link student to parent if a parent was created
+	if parentID != nil {
+		if err := database.LinkStudentToParent(config.GetDB(), student.ID, *parentID, "Parent"); err != nil {
+			return c.Status(500).JSON(fiber.Map{"error": "Failed to link student to parent"})
+		}
 	}
 
 	return c.Status(201).JSON(fiber.Map{

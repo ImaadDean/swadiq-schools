@@ -32,6 +32,12 @@ func LoginAPI(c *fiber.Ctx) error {
 		return c.Status(401).JSON(fiber.Map{"error": "Invalid credentials"})
 	}
 
+	roles, err := database.GetUserRoles(config.GetDB(), user.ID)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to get user roles"})
+	}
+	user.Roles = roles
+
 	sessionID := GenerateSessionID()
 	expiresAt := GetSessionExpiry()
 
@@ -50,13 +56,7 @@ func LoginAPI(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"message": "Login successful",
-		"user": fiber.Map{
-			"id":         user.ID,
-			"email":      user.Email,
-			"first_name": user.FirstName,
-			"last_name":  user.LastName,
-			"role":       user.Role,
-		},
+		"user":    user,
 	})
 }
 
@@ -88,7 +88,7 @@ func ChangePasswordAPI(c *fiber.Ctx) error {
 	}
 
 	userID := c.Locals("user_id").(int)
-	
+
 	// Get current user to verify current password
 	user, err := database.GetUserByEmail(config.GetDB(), c.Locals("user_email").(string))
 	if err != nil {

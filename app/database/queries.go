@@ -8,18 +8,42 @@ import (
 
 func GetUserByEmail(db *sql.DB, email string) (*models.User, error) {
 	user := &models.User{}
-	query := `SELECT id, email, password, first_name, last_name, role, is_active, created_at, updated_at 
+	query := `SELECT id, email, password, first_name, last_name, is_active, created_at, updated_at 
 			  FROM users WHERE email = $1 AND is_active = true`
 	
 	err := db.QueryRow(query, email).Scan(
 		&user.ID, &user.Email, &user.Password, &user.FirstName, 
-		&user.LastName, &user.Role, &user.IsActive, &user.CreatedAt, &user.UpdatedAt,
+		&user.LastName, &user.IsActive, &user.CreatedAt, &user.UpdatedAt,
 	)
 	
 	if err != nil {
 		return nil, err
 	}
 	return user, nil
+}
+
+func GetUserRoles(db *sql.DB, userID int) ([]*models.Role, error) {
+	query := `
+		SELECT r.id, r.name
+		FROM roles r
+		JOIN user_roles ur ON r.id = ur.role_id
+		WHERE ur.user_id = $1
+	`
+	rows, err := db.Query(query, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var roles []*models.Role
+	for rows.Next() {
+		var role models.Role
+		if err := rows.Scan(&role.ID, &role.Name); err != nil {
+			return nil, err
+		}
+		roles = append(roles, &role)
+	}
+	return roles, nil
 }
 
 func CreateSession(db *sql.DB, sessionID string, userID int, expiresAt time.Time) error {
@@ -57,7 +81,7 @@ func UpdateUserPassword(db *sql.DB, userID int, hashedPassword string) error {
 func GetAllStudents(db *sql.DB) ([]models.Student, error) {
 	// Simple query first to check if table exists
 	query := `SELECT s.id, s.student_id, s.first_name, s.last_name, s.date_of_birth, 
-			  s.gender, s.address, s.parent_id, s.class_id, s.is_active, s.created_at, s.updated_at
+			  s.gender, s.address, s.class_id, s.is_active, s.created_at, s.updated_at
 			  FROM students s 
 			  WHERE s.is_active = true ORDER BY s.created_at DESC`
 	
@@ -74,7 +98,7 @@ func GetAllStudents(db *sql.DB) ([]models.Student, error) {
 		
 		err := rows.Scan(
 			&student.ID, &student.StudentID, &student.FirstName, &student.LastName,
-			&student.DateOfBirth, &student.Gender, &student.Address, &student.ParentID,
+			&student.DateOfBirth, &student.Gender, &student.Address,
 			&student.ClassID, &student.IsActive, &student.CreatedAt, &student.UpdatedAt,
 		)
 		if err != nil {
@@ -98,12 +122,18 @@ func CreateParent(db *sql.DB, parent *models.Parent) error {
 
 func CreateStudent(db *sql.DB, student *models.Student) error {
 	query := `INSERT INTO students (student_id, first_name, last_name, date_of_birth, 
-			  gender, address, parent_id, class_id) 
-			  VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, created_at, updated_at`
+			  gender, address, class_id) 
+			  VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, created_at, updated_at`
 	
 	err := db.QueryRow(query, student.StudentID, student.FirstName, student.LastName,
-		student.DateOfBirth, student.Gender, student.Address, student.ParentID,
+		student.DateOfBirth, student.Gender, student.Address,
 		student.ClassID).Scan(&student.ID, &student.CreatedAt, &student.UpdatedAt)
 	
+	return err
+}
+
+func LinkStudentToParent(db *sql.DB, studentID string, parentID string, relationship string) error {
+	query := `INSERT INTO student_parents (student_id, parent_id, relationship) VALUES ($1, $2, $3)`
+	_, err := db.Exec(query, studentID, parentID, relationship)
 	return err
 }

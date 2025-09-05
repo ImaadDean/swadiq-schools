@@ -42,7 +42,7 @@ func ShowProfilePage(c *fiber.Ctx) error {
 		"FirstName": c.Locals("user_first_name"),
 		"LastName":  c.Locals("user_last_name"),
 		"Email":     c.Locals("user_email"),
-		"Role":      c.Locals("user_role"),
+		"Roles":     c.Locals("user_roles"),
 	})
 }
 
@@ -68,10 +68,11 @@ func AuthMiddleware(c *fiber.Ctx) error {
 		FirstName string
 		LastName  string
 		Role      string
+		Password  string
 	}
-	query := `SELECT id, email, first_name, last_name, role FROM users WHERE id = $1`
+	query := `SELECT id, email, first_name, last_name, role, password FROM users WHERE id = $1`
 	err = config.GetDB().QueryRow(query, session.UserID).Scan(
-		&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.Role,
+		&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.Role, &user.Password,
 	)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "User not found"})
@@ -83,6 +84,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	c.Locals("user_first_name", user.FirstName)
 	c.Locals("user_last_name", user.LastName)
 	c.Locals("user_role", user.Role)
+	c.Locals("user_password", user.Password)
 	c.Locals("user", user)
 
 	return c.Next()
@@ -102,3 +104,4 @@ func RoleMiddleware(allowedRoles ...string) fiber.Handler {
 		return c.Status(403).JSON(fiber.Map{"error": "Insufficient permissions"})
 	}
 }
+

@@ -25,12 +25,4 @@ func GetSessionExpiry() time.Time {
 	return time.Now().Add(24 * time.Hour) // 24 hours
 }
 
-func IsValidRole(role string) bool {
-	validRoles := []string{"admin", "head_teacher", "class_teacher", "subject_teacher"}
-	for _, validRole := range validRoles {
-		if role == validRole {
-			return true
-		}
-	}
-	return false
-}
+

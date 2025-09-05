@@ -3,32 +3,21 @@ package models
 import "time"
 
 type User struct {
-	ID        int       `json:"id"`
-	Email     string    `json:"email"`
-	Password  string    `json:"-"`
-	FirstName string    `json:"first_name"`
-	LastName  string    `json:"last_name"`
-	Role      string    `json:"role"`
-	IsActive  bool      `json:"is_active"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID        string     `json:"id" validate:"required,uuid"`
+	Email     string     `json:"email" validate:"required,email"`
+	Password  string     `json:"-" validate:"required,min=8"`
+	FirstName string     `json:"first_name" validate:"required"`
+	LastName  string     `json:"last_name" validate:"required"`
+	IsActive  bool       `json:"is_active"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+	Roles     []*Role    `json:"roles,omitempty"` // Optional for JSON responses
 }
 
 type Session struct {
-	ID        string    `json:"id"`
-	UserID    int       `json:"user_id"`
-	ExpiresAt time.Time `json:"expires_at"`
-	CreatedAt time.Time `json:"created_at"`
+	ID        string
+	UserID    int
+	ExpiresAt time.Time
+	CreatedAt time.Time
 }
-
-type Role struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-}
-
-const (
-	RoleAdmin         = "admin"
-	RoleHeadTeacher   = "head_teacher"
-	RoleClassTeacher  = "class_teacher"
-	RoleSubjectTeacher = "subject_teacher"
-)
