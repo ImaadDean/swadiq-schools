@@ -6,8 +6,101 @@
     <p class="text-gray-600">Welcome to Swadiq Schools Management System</p>
 </div>
 
-<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-    <h3 class="text-xl font-bold text-gray-800 mb-6">Dashboard is working!</h3>
-    <p>This is the dashboard page.</p>
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center">
+            <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                <span class="text-2xl">👥</span>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Total Students</p>
+                <p class="text-2xl font-bold text-gray-900">1,234</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center">
+            <div class="p-3 rounded-full bg-green-100 text-green-600">
+                <span class="text-2xl">👨🏫</span>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Total Teachers</p>
+                <p class="text-2xl font-bold text-gray-900">45</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center">
+            <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                <span class="text-2xl">🏫</span>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Total Classes</p>
+                <p class="text-2xl font-bold text-gray-900">24</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center">
+            <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                <span class="text-2xl">📚</span>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Total Subjects</p>
+                <p class="text-2xl font-bold text-gray-900">12</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity & Quick Actions -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Recent Activity -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-6">Recent Activity</h3>
+        <div class="space-y-4">
+            <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                <span class="text-green-600 mr-3">✅</span>
+                <div>
+                    <p class="text-sm font-medium text-gray-900">Attendance marked for Class 5A</p>
+                    <p class="text-xs text-gray-500">15 minutes ago</p>
+                </div>
+            </div>
+            <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                <span class="text-purple-600 mr-3">📊</span>
+                <div>
+                    <p class="text-sm font-medium text-gray-900">Exam results uploaded</p>
+                    <p class="text-xs text-gray-500">1 hour ago</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-6">Quick Actions</h3>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col items-center p-4 bg-blue-50 rounded-lg">
+                <span class="text-2xl mb-2">👥</span>
+                <span class="text-sm font-medium text-blue-700">Students</span>
+            </div>
+            <div class="flex flex-col items-center p-4 bg-green-50 rounded-lg">
+                <span class="text-2xl mb-2">👨🏫</span>
+                <span class="text-sm font-medium text-green-700">Teachers</span>
+            </div>
+            <div class="flex flex-col items-center p-4 bg-purple-50 rounded-lg">
+                <span class="text-2xl mb-2">🏫</span>
+                <span class="text-sm font-medium text-purple-700">Classes</span>
+            </div>
+            <div class="flex flex-col items-center p-4 bg-yellow-50 rounded-lg">
+                <span class="text-2xl mb-2">📝</span>
+                <span class="text-sm font-medium text-yellow-700">Attendance</span>
+            </div>
+        </div>
+    </div>
 </div>
 {{end}}

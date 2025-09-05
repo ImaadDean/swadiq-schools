@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"swadiq-schools/app/config"
 	"swadiq-schools/app/database"
+	"swadiq-schools/app/models"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -15,6 +16,8 @@ func SetupAuthRoutes(app *fiber.App) {
 	auth.Get("/login", ShowLoginPage)
 	auth.Post("/login", LoginAPI)
 	auth.Post("/logout", LogoutAPI)
+	auth.Get("/forgot-password", ShowForgotPasswordPage)
+	auth.Post("/forgot-password", ForgotPasswordAPI)
 
 	// Protected routes
 	auth.Use(AuthMiddleware)
@@ -32,6 +35,12 @@ func ShowLoginPage(c *fiber.Ctx) error {
 
 	return c.Render("auth/login", fiber.Map{
 		"Title": "Login - Swadiq Schools",
+	})
+}
+
+func ShowForgotPasswordPage(c *fiber.Ctx) error {
+	return c.Render("auth/forgot-password", fiber.Map{
+		"Title": "Forgot Password - Swadiq Schools",
 	})
 }
 
@@ -62,20 +71,15 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	}
 
 	// Get user details by ID
-	var user struct {
-		ID        int
-		Email     string
-		FirstName string
-		LastName  string
-		Role      string
-		Password  string
-	}
-	query := `SELECT id, email, first_name, last_name, role, password FROM users WHERE id = $1`
-	err = config.GetDB().QueryRow(query, session.UserID).Scan(
-		&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.Role, &user.Password,
-	)
+	user, err := database.GetUserByID(config.GetDB(), session.UserID)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "User not found"})
+	}
+
+	// Get user roles
+	roles, err := database.GetUserRoles(config.GetDB(), session.UserID)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to get user roles"})
 	}
 
 	// Set user context
@@ -83,8 +87,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	c.Locals("user_email", user.Email)
 	c.Locals("user_first_name", user.FirstName)
 	c.Locals("user_last_name", user.LastName)
-	c.Locals("user_role", user.Role)
-	c.Locals("user_password", user.Password)
+	c.Locals("user_roles", roles)
 	c.Locals("user", user)
 
 	return c.Next()
@@ -93,11 +96,13 @@ func AuthMiddleware(c *fiber.Ctx) error {
 // RoleMiddleware checks if user has required role
 func RoleMiddleware(allowedRoles ...string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		userRole := c.Locals("user_role").(string)
+		userRoles := c.Locals("user_roles").([]*models.Role)
 		
-		for _, role := range allowedRoles {
-			if userRole == role {
-				return c.Next()
+		for _, userRole := range userRoles {
+			for _, allowedRole := range allowedRoles {
+				if userRole.Name == allowedRole {
+					return c.Next()
+				}
 			}
 		}
 		

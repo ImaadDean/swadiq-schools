@@ -22,6 +22,22 @@ func GetUserByEmail(db *sql.DB, email string) (*models.User, error) {
 	return user, nil
 }
 
+func GetUserByID(db *sql.DB, userID int) (*models.User, error) {
+	user := &models.User{}
+	query := `SELECT id, email, password, first_name, last_name, is_active, created_at, updated_at 
+			  FROM users WHERE id = $1 AND is_active = true`
+	
+	err := db.QueryRow(query, userID).Scan(
+		&user.ID, &user.Email, &user.Password, &user.FirstName, 
+		&user.LastName, &user.IsActive, &user.CreatedAt, &user.UpdatedAt,
+	)
+	
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
 func GetUserRoles(db *sql.DB, userID int) ([]*models.Role, error) {
 	query := `
 		SELECT r.id, r.name
@@ -110,16 +126,6 @@ func GetAllStudents(db *sql.DB) ([]models.Student, error) {
 	return students, nil
 }
 
-func CreateParent(db *sql.DB, parent *models.Parent) error {
-	query := `INSERT INTO parents (first_name, last_name, phone, email, address) 
-			  VALUES ($1, $2, $3, $4, $5) RETURNING id, created_at, updated_at`
-	
-	err := db.QueryRow(query, parent.FirstName, parent.LastName,
-		parent.Phone, parent.Email, parent.Address).Scan(&parent.ID, &parent.CreatedAt, &parent.UpdatedAt)
-	
-	return err
-}
-
 func CreateStudent(db *sql.DB, student *models.Student) error {
 	query := `INSERT INTO students (student_id, first_name, last_name, date_of_birth, 
 			  gender, address, class_id) 
@@ -136,4 +142,90 @@ func LinkStudentToParent(db *sql.DB, studentID string, parentID string, relation
 	query := `INSERT INTO student_parents (student_id, parent_id, relationship) VALUES ($1, $2, $3)`
 	_, err := db.Exec(query, studentID, parentID, relationship)
 	return err
+}
+
+func GetAllParents(db *sql.DB) ([]*models.Parent, error) {
+	query := `SELECT id, first_name, last_name, phone, email, address, is_active, created_at, updated_at 
+			  FROM parents WHERE is_active = true ORDER BY first_name, last_name`
+	
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var parents []*models.Parent
+	for rows.Next() {
+		parent := &models.Parent{}
+		err := rows.Scan(
+			&parent.ID, &parent.FirstName, &parent.LastName, &parent.Phone, 
+			&parent.Email, &parent.Address, &parent.IsActive, &parent.CreatedAt, &parent.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		parents = append(parents, parent)
+	}
+	
+	return parents, nil
+}
+
+func CreateParent(db *sql.DB, parent *models.Parent) error {
+	query := `INSERT INTO parents (id, first_name, last_name, phone, email, address, is_active, created_at, updated_at) 
+			  VALUES (uuid_generate_v4(), $1, $2, $3, $4, $5, true, NOW(), NOW()) 
+			  RETURNING id, created_at, updated_at`
+	
+	err := db.QueryRow(query, parent.FirstName, parent.LastName, parent.Phone, parent.Email, parent.Address).Scan(
+		&parent.ID, &parent.CreatedAt, &parent.UpdatedAt,
+	)
+	
+	if err != nil {
+		return err
+	}
+	
+	parent.IsActive = true
+	return nil
+}
+
+func GetAllClasses(db *sql.DB) ([]*models.Class, error) {
+	query := `SELECT id, name, teacher_id, is_active, created_at, updated_at 
+			  FROM classes WHERE is_active = true ORDER BY name`
+	
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var classes []*models.Class
+	for rows.Next() {
+		class := &models.Class{}
+		err := rows.Scan(
+			&class.ID, &class.Name, &class.TeacherID, 
+			&class.IsActive, &class.CreatedAt, &class.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		classes = append(classes, class)
+	}
+	
+	return classes, nil
+}
+
+func CreateClass(db *sql.DB, class *models.Class) error {
+	query := `INSERT INTO classes (id, name, teacher_id, is_active, created_at, updated_at) 
+			  VALUES (uuid_generate_v4(), $1, $2, true, NOW(), NOW()) 
+			  RETURNING id, created_at, updated_at`
+	
+	err := db.QueryRow(query, class.Name, class.TeacherID).Scan(
+		&class.ID, &class.CreatedAt, &class.UpdatedAt,
+	)
+	
+	if err != nil {
+		return err
+	}
+	
+	class.IsActive = true
+	return nil
 }

@@ -14,6 +14,7 @@ func SetupStudentsRoutes(app *fiber.App) {
 
 	// Routes
 	students.Get("/", StudentsPage)
+	students.Get("/add", AddStudentPage)
 
 	// API routes
 	api := app.Group("/api/students")
@@ -32,6 +33,14 @@ func StudentsPage(c *fiber.Ctx) error {
 		"Title":       "Students - Swadiq Schools",
 		"CurrentPage": "students",
 		"students":    students,
+		"user":        c.Locals("user"),
+	})
+}
+
+func AddStudentPage(c *fiber.Ctx) error {
+	return c.Render("students/add", fiber.Map{
+		"Title":       "Add Student - Swadiq Schools",
+		"CurrentPage": "students",
 		"user":        c.Locals("user"),
 	})
 }

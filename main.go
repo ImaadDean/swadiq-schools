@@ -4,7 +4,9 @@ import (
 	"log"
 	"swadiq-schools/app/config"
 	"swadiq-schools/app/routes/auth"
+	"swadiq-schools/app/routes/classes"
 	"swadiq-schools/app/routes/dashboard"
+	"swadiq-schools/app/routes/parents"
 	"swadiq-schools/app/routes/students"
 
 	"github.com/gofiber/fiber/v2"
@@ -49,6 +51,21 @@ func main() {
 
 	// Setup students routes
 	students.SetupStudentsRoutes(app)
+
+	// Setup classes routes
+	classes.SetupClassesRoutes(app)
+
+	// Setup parents API routes
+	api := app.Group("/api/parents")
+	api.Use(auth.AuthMiddleware)
+	api.Get("/", parents.GetParentsAPI)
+	api.Post("/", parents.CreateParentAPI)
+
+	// Setup classes API routes
+	classesAPI := app.Group("/api/classes")
+	classesAPI.Use(auth.AuthMiddleware)
+	classesAPI.Get("/", classes.GetClassesAPI)
+	classesAPI.Post("/", classes.CreateClassAPI)
 
 	// Start server
 	log.Println("Server starting on :8080")

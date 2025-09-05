@@ -3,91 +3,193 @@
 {{define "content"}}
 <div class="mb-8">
     <div class="flex justify-between items-center">
-        <h1 class="text-4xl font-bold text-gray-800">Students Management</h1>
-        <button onclick="showAddForm()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+        <h1 class="text-4xl font-bold text-gray-800">Students</h1>
+        <button onclick="showAddModal()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
             Add Student
         </button>
     </div>
 </div>
 
 <div class="bg-white rounded-lg shadow-md p-6">
-    <div class="overflow-x-auto">
-        <table class="min-w-full table-auto">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-4 py-2 text-left">Student ID</th>
-                    <th class="px-4 py-2 text-left">Name</th>
-                    <th class="px-4 py-2 text-left">Gender</th>
-                    <th class="px-4 py-2 text-left">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{if .students}}
-                {{range .students}}
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-4 py-2">{{.StudentID}}</td>
-                    <td class="px-4 py-2">{{.FirstName}} {{.LastName}}</td>
-                    <td class="px-4 py-2">{{if .Gender}}{{.Gender}}{{else}}-{{end}}</td>
-                    <td class="px-4 py-2">
-                        <span class="px-2 py-1 text-xs rounded-full {{if .IsActive}}bg-green-100 text-green-800{{else}}bg-red-100 text-red-800{{end}}">
-                            {{if .IsActive}}Active{{else}}Inactive{{end}}
-                        </span>
-                    </td>
-                </tr>
-                {{end}}
-                {{else}}
-                <tr>
-                    <td colspan="4" class="px-4 py-8 text-center text-gray-500">No students found</td>
-                </tr>
-                {{end}}
-            </tbody>
-        </table>
-    </div>
+    <p class="text-gray-600 text-center">Students will be displayed here.</p>
 </div>
 
 <!-- Add Student Modal -->
-<div id="addModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
-    <div class="flex items-center justify-center min-h-screen">
-        <div class="bg-white p-6 rounded-lg w-96">
-            <h2 class="text-xl font-bold mb-4">Add New Student</h2>
-            <form id="addStudentForm">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Student ID</label>
-                    <input type="text" name="student_id" required class="w-full px-3 py-2 border rounded-md">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">First Name</label>
-                    <input type="text" name="first_name" required class="w-full px-3 py-2 border rounded-md">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Last Name</label>
-                    <input type="text" name="last_name" required class="w-full px-3 py-2 border rounded-md">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Gender</label>
-                    <select name="gender" class="w-full px-3 py-2 border rounded-md">
-                        <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                </div>
-                <div class="flex justify-end space-x-2">
-                    <button type="button" onclick="hideAddForm()" class="px-4 py-2 text-gray-600 border rounded-md">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">Add Student</button>
-                </div>
-            </form>
+<div id="addModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg w-full max-w-2xl max-h-screen overflow-y-auto">
+            <div class="p-6">
+                <h2 class="text-xl font-bold mb-4">Add New Student</h2>
+                <form id="addStudentForm" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Student ID *</label>
+                            <input type="text" name="student_id" id="student_id" readonly class="w-full px-3 py-2 border rounded-md bg-gray-100 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">First Name *</label>
+                            <input type="text" name="first_name" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Last Name *</label>
+                            <input type="text" name="last_name" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Date of Birth</label>
+                            <input type="date" name="date_of_birth" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Gender</label>
+                            <select name="gender" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Class ID</label>
+                            <input type="text" name="class_id" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Address</label>
+                        <textarea name="address" rows="3" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                    
+                    <!-- Parent Information -->
+                    <div class="border-t pt-4">
+                        <h3 class="text-lg font-medium mb-3">Parent Information</h3>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-2">Select Parent</label>
+                            <div class="flex gap-2">
+                                <select id="parentSelect" name="parent_id" class="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Search and select parent...</option>
+                                </select>
+                                <button type="button" onclick="showAddParentModal()" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Add New Parent</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-2 pt-4">
+                        <button type="button" onclick="hideAddModal()" class="px-4 py-2 text-gray-600 border rounded-md hover:bg-gray-50">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Add Student</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Parent Modal -->
+<div id="addParentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-[60]">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg w-full max-w-md">
+            <div class="p-6">
+                <h2 class="text-xl font-bold mb-4">Add New Parent</h2>
+                <form id="addParentForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">First Name *</label>
+                        <input type="text" name="first_name" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Last Name *</label>
+                        <input type="text" name="last_name" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Phone</label>
+                        <input type="tel" name="phone" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Email</label>
+                        <input type="email" name="email" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Address</label>
+                        <textarea name="address" rows="3" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                    </div>
+                    <div class="flex justify-end space-x-2 pt-4">
+                        <button type="button" onclick="hideAddParentModal()" class="px-4 py-2 text-gray-600 border rounded-md hover:bg-gray-50">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Add Parent</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    function showAddForm() {
+    function generateUUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
+    async function loadParents() {
+        try {
+            const response = await fetch('/api/parents');
+            const data = await response.json();
+            const select = document.getElementById('parentSelect');
+            select.innerHTML = '<option value="">Search and select parent...</option>';
+            
+            data.parents.forEach(parent => {
+                const option = document.createElement('option');
+                option.value = parent.id;
+                option.textContent = `${parent.first_name} ${parent.last_name} - ${parent.phone || parent.email || ''}`;
+                select.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Failed to load parents:', error);
+        }
+    }
+
+    function showAddModal() {
+        document.getElementById('student_id').value = generateUUID();
+        loadParents();
         document.getElementById('addModal').classList.remove('hidden');
     }
 
-    function hideAddForm() {
+    function hideAddModal() {
         document.getElementById('addModal').classList.add('hidden');
+        document.getElementById('addStudentForm').reset();
     }
+
+    function showAddParentModal() {
+        document.getElementById('addParentModal').classList.remove('hidden');
+    }
+
+    function hideAddParentModal() {
+        document.getElementById('addParentModal').classList.add('hidden');
+        document.getElementById('addParentForm').reset();
+    }
+
+    document.getElementById('addParentForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+
+        try {
+            const response = await fetch('/api/parents', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                hideAddParentModal();
+                loadParents();
+                document.getElementById('parentSelect').value = result.parent.id;
+                alert('Parent added successfully!');
+            } else {
+                const error = await response.json();
+                alert(error.error || 'Failed to add parent');
+            }
+        } catch (error) {
+            alert('Network error');
+        }
+    });
 
     document.getElementById('addStudentForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -102,7 +204,8 @@
             });
 
             if (response.ok) {
-                location.reload();
+                hideAddModal();
+                alert('Student added successfully!');
             } else {
                 const error = await response.json();
                 alert(error.error || 'Failed to add student');

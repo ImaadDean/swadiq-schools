@@ -22,15 +22,14 @@ func GetStudentsAPI(c *fiber.Ctx) error {
 
 func CreateStudentAPI(c *fiber.Ctx) error {
 	type CreateStudentRequest struct {
-		StudentID   string `json:"student_id"`
-		FirstName   string `json:"first_name"`
-		LastName    string `json:"last_name"`
-		DateOfBirth string `json:"date_of_birth"`
-		Gender      string `json:"gender"`
-		Address     string `json:"address"`
-		ParentName  string `json:"parent_name"`
-		ParentPhone string `json:"parent_phone"`
-		ParentEmail string `json:"parent_email"`
+		StudentID     string `json:"student_id"`
+		FirstName     string `json:"first_name"`
+		LastName      string `json:"last_name"`
+		DateOfBirth   string `json:"date_of_birth"`
+		Gender        string `json:"gender"`
+		Address       string `json:"address"`
+		ClassID       string `json:"class_id"`
+		ParentID      string `json:"parent_id"`
 	}
 
 	var req CreateStudentRequest
@@ -40,26 +39,6 @@ func CreateStudentAPI(c *fiber.Ctx) error {
 
 	if req.StudentID == "" || req.FirstName == "" || req.LastName == "" {
 		return c.Status(400).JSON(fiber.Map{"error": "Student ID, first name, and last name are required"})
-	}
-
-	// Create parent if provided
-	var parentID *string
-	if req.ParentName != "" {
-		parent := &models.Parent{
-			FirstName: req.ParentName,
-			LastName:  req.LastName, // Use student's last name as default
-		}
-		if req.ParentPhone != "" {
-			parent.Phone = &req.ParentPhone
-		}
-		if req.ParentEmail != "" {
-			parent.Email = &req.ParentEmail
-		}
-
-		if err := database.CreateParent(config.GetDB(), parent); err != nil {
-			return c.Status(500).JSON(fiber.Map{"error": "Failed to create parent"})
-		}
-		parentID = &parent.ID
 	}
 
 	// Create student
@@ -79,14 +58,17 @@ func CreateStudentAPI(c *fiber.Ctx) error {
 	if req.Address != "" {
 		student.Address = &req.Address
 	}
+	if req.ClassID != "" {
+		student.ClassID = &req.ClassID
+	}
 
 	if err := database.CreateStudent(config.GetDB(), student); err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to create student"})
 	}
 
-	// Link student to parent if a parent was created
-	if parentID != nil {
-		if err := database.LinkStudentToParent(config.GetDB(), student.ID, *parentID, "Parent"); err != nil {
+	// Link student to parent if provided
+	if req.ParentID != "" {
+		if err := database.LinkStudentToParent(config.GetDB(), student.ID, req.ParentID, "Parent"); err != nil {
 			return c.Status(500).JSON(fiber.Map{"error": "Failed to link student to parent"})
 		}
 	}

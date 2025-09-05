@@ -2,6 +2,7 @@ package auth
 
 import (
 	"database/sql"
+	"strconv"
 	"swadiq-schools/app/config"
 	"swadiq-schools/app/database"
 	"time"
@@ -32,7 +33,12 @@ func LoginAPI(c *fiber.Ctx) error {
 		return c.Status(401).JSON(fiber.Map{"error": "Invalid credentials"})
 	}
 
-	roles, err := database.GetUserRoles(config.GetDB(), user.ID)
+	userIDInt, err := strconv.Atoi(user.ID)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Invalid user ID"})
+	}
+
+	roles, err := database.GetUserRoles(config.GetDB(), userIDInt)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to get user roles"})
 	}
@@ -41,7 +47,7 @@ func LoginAPI(c *fiber.Ctx) error {
 	sessionID := GenerateSessionID()
 	expiresAt := GetSessionExpiry()
 
-	if err := database.CreateSession(config.GetDB(), sessionID, user.ID, expiresAt); err != nil {
+	if err := database.CreateSession(config.GetDB(), sessionID, userIDInt, expiresAt); err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to create session"})
 	}
 
@@ -73,7 +79,7 @@ func LogoutAPI(c *fiber.Ctx) error {
 		HTTPOnly: true,
 	})
 
-	return c.JSON(fiber.Map{"message": "Logout successful"})
+	return c.Redirect("/auth/login")
 }
 
 func ChangePasswordAPI(c *fiber.Ctx) error {
@@ -109,4 +115,52 @@ func ChangePasswordAPI(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{"message": "Password changed successfully"})
+}
+
+func ForgotPasswordAPI(c *fiber.Ctx) error {
+	type ForgotPasswordRequest struct {
+		Email       string `json:"email"`
+		NewPassword string `json:"new_password,omitempty"`
+	}
+
+	var req ForgotPasswordRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "Invalid request"})
+	}
+
+	// Check if user exists
+	user, err := database.GetUserByEmail(config.GetDB(), req.Email)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return c.Status(404).JSON(fiber.Map{"error": "Email not found"})
+		}
+		return c.Status(500).JSON(fiber.Map{"error": "Database error"})
+	}
+
+	// If no new password provided, just verify email exists
+	if req.NewPassword == "" {
+		return c.JSON(fiber.Map{
+			"message": "Email verified",
+			"user_found": true,
+		})
+	}
+
+	// Hash new password
+	hashedPassword, err := HashPassword(req.NewPassword)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to hash password"})
+	}
+
+	// Convert user ID to int
+	userIDInt, err := strconv.Atoi(user.ID)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Invalid user ID"})
+	}
+
+	// Update password
+	if err := database.UpdateUserPassword(config.GetDB(), userIDInt, hashedPassword); err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to update password"})
+	}
+
+	return c.JSON(fiber.Map{"message": "Password reset successfully"})
 }
