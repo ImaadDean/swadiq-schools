@@ -1,0 +1,569 @@
+<!-- Teachers Management Content -->
+<div class="p-4 lg:p-6">
+    <!-- Header Section -->
+    <div class="mb-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 mb-1">Teachers Management</h1>
+                <p class="text-gray-600 text-sm">Manage teacher records, assignments, and information</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 text-sm">
+                    <i class="fas fa-download mr-2"></i>Export
+                </button>
+                <button id="addTeacherBtn" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200 text-sm">
+                    <i class="fas fa-plus mr-2"></i>Add Teacher
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Department Overview -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Department Overview</h2>
+        <div id="departmentOverview" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Department cards will be populated here -->
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <!-- Total Teachers -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Total Teachers</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">{{if .teachers}}{{len .teachers}}{{else}}0{{end}}</p>
+                </div>
+                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-chalkboard-teacher text-blue-600"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Teachers -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Active Teachers</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">{{if .teachers}}{{len .teachers}}{{else}}0{{end}}</p>
+                </div>
+                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-check-circle text-green-600"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class Teachers -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Class Teachers</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">15</p>
+                </div>
+                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-school text-purple-600"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subject Teachers -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Subject Teachers</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">28</p>
+                </div>
+                <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-book text-orange-600"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-3 lg:space-y-0">
+            <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+                <!-- Search -->
+                <div class="relative">
+                    <input type="text" placeholder="Search teachers..." 
+                           class="w-full sm:w-64 pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+                
+                <!-- Department Filter -->
+                <select class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white">
+                    <option value="">All Departments</option>
+                    <option value="mathematics">Mathematics</option>
+                    <option value="science">Science</option>
+                    <option value="english">English</option>
+                    <option value="history">History</option>
+                    <option value="physical_education">Physical Education</option>
+                    <option value="arts">Arts</option>
+                </select>
+
+                <!-- Role Filter -->
+                <select class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white">
+                    <option value="">All Roles</option>
+                    <option value="class_teacher">Class Teacher</option>
+                    <option value="subject_teacher">Subject Teacher</option>
+                    <option value="head_teacher">Head Teacher</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <button class="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-filter mr-1"></i>More Filters
+                </button>
+                <button class="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-sort mr-1"></i>Sort
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teachers Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <input type="checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                        </th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Classes</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {{range .teachers}}
+                    <tr class="hover:bg-gray-50 transition-colors duration-200">
+                        <td class="px-4 py-3">
+                            <input type="checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-white text-sm"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-gray-900">{{.FirstName}} {{.LastName}}</p>
+                                    <p class="text-xs text-gray-500">{{.Email}}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-sm text-gray-900">{{.ID}}</td>
+                        <td class="px-4 py-3 text-sm text-gray-900">Mathematics</td>
+                        <td class="px-4 py-3 text-sm text-gray-900">Class Teacher</td>
+                        <td class="px-4 py-3">
+                            <p class="text-sm text-gray-900">Grade 9-A</p>
+                            <p class="text-xs text-gray-500">Mathematics, Physics</p>
+                        </td>
+                        <td class="px-4 py-3">
+                            {{if .IsActive}}
+                            <span class="inline-flex px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Active</span>
+                            {{else}}
+                            <span class="inline-flex px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">Inactive</span>
+                            {{end}}
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center space-x-2">
+                                <button class="p-1 text-gray-400 hover:text-blue-600 transition-colors duration-200" title="View">
+                                    <i class="fas fa-eye text-sm"></i>
+                                </button>
+                                <button class="p-1 text-gray-400 hover:text-green-600 transition-colors duration-200" title="Edit">
+                                    <i class="fas fa-edit text-sm"></i>
+                                </button>
+                                <button class="p-1 text-gray-400 hover:text-red-600 transition-colors duration-200" title="Delete">
+                                    <i class="fas fa-trash text-sm"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {{else}}
+                    <tr>
+                        <td colspan="8" class="px-4 py-8 text-center text-gray-500">
+                            <i class="fas fa-chalkboard-teacher text-4xl mb-4 text-gray-300"></i>
+                            <p class="text-lg font-medium">No teachers found</p>
+                            <p class="text-sm">Add your first teacher to get started</p>
+                        </td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="bg-gray-50 px-4 py-3 border-t border-gray-200">
+            <div class="flex items-center justify-between">
+                <div class="text-sm text-gray-700">
+                    Showing <span class="font-medium">1</span> to <span class="font-medium">{{if .teachers}}{{len .teachers}}{{else}}0{{end}}</span> of <span class="font-medium">{{if .teachers}}{{len .teachers}}{{else}}0{{end}}</span> results
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-200 rounded transition-colors duration-200" disabled>
+                        Previous
+                    </button>
+                    <button class="px-3 py-1 text-sm bg-primary-600 text-white rounded">1</button>
+                    <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-200 rounded transition-colors duration-200">
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Teacher Modal -->
+<div id="addTeacherModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-900">Add New Teacher</h2>
+            <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <form id="addTeacherForm" class="p-6 space-y-6">
+            <!-- Personal Information -->
+            <div>
+                <h3 class="text-md font-medium text-gray-900 mb-4">Personal Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                        <input type="text" id="firstName" name="firstName" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                               placeholder="Enter first name">
+                    </div>
+                    <div>
+                        <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                        <input type="text" id="lastName" name="lastName" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                               placeholder="Enter last name">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                        <input type="email" id="email" name="email" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                               placeholder="teacher@swadiqschools.com">
+                    </div>
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                        <input type="tel" id="phone" name="phone"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                               placeholder="+256 XXX XXX XXX">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Information -->
+            <div>
+                <h3 class="text-md font-medium text-gray-900 mb-4">Account Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password *</label>
+                        <input type="password" id="password" name="password" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                               placeholder="Enter secure password">
+                        <p class="text-xs text-gray-500 mt-1">Password must be at least 8 characters long</p>
+                    </div>
+                    <div>
+                        <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">Confirm Password *</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                               placeholder="Confirm password">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Professional Information -->
+            <div>
+                <h3 class="text-md font-medium text-gray-900 mb-4">Professional Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="department" class="block text-sm font-medium text-gray-700 mb-2">Department</label>
+                        <select id="department" name="department"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white">
+                            <option value="">Select Department</option>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div>
+                        <label for="subjects" class="block text-sm font-medium text-gray-700 mb-2">Subjects</label>
+                        <select id="subjects" name="subjects" multiple
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
+                                style="min-height: 80px;">
+                            <option value="">Select subjects (hold Ctrl/Cmd for multiple)</option>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                        <p class="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple subjects</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+                <button type="button" id="cancelBtn"
+                        class="px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200">
+                    <i class="fas fa-plus mr-2"></i>Add Teacher
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Initialize teachers page functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Modal elements
+    const addTeacherBtn = document.getElementById('addTeacherBtn');
+    const addTeacherModal = document.getElementById('addTeacherModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const addTeacherForm = document.getElementById('addTeacherForm');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+
+    // Load department overview on page load
+    loadDepartmentOverview();
+
+    // Modal functionality
+    function openModal() {
+        addTeacherModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        loadDepartments();
+        loadSubjects();
+    }
+
+    function closeModal() {
+        addTeacherModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        addTeacherForm.reset();
+    }
+
+    // Event listeners for modal
+    addTeacherBtn.addEventListener('click', openModal);
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+
+    // Close modal when clicking outside
+    addTeacherModal.addEventListener('click', function(e) {
+        if (e.target === addTeacherModal) {
+            closeModal();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && !addTeacherModal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+
+    // Password validation
+    function validatePasswords() {
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        if (password !== confirmPassword) {
+            confirmPasswordInput.setCustomValidity('Passwords do not match');
+        } else {
+            confirmPasswordInput.setCustomValidity('');
+        }
+    }
+
+    passwordInput.addEventListener('input', validatePasswords);
+    confirmPasswordInput.addEventListener('input', validatePasswords);
+
+    // Load department overview
+    async function loadDepartmentOverview() {
+        try {
+            const response = await fetch('/api/departments');
+            const data = await response.json();
+
+            const overviewContainer = document.getElementById('departmentOverview');
+            overviewContainer.innerHTML = '';
+
+            data.departments.forEach(department => {
+                const card = document.createElement('div');
+                card.className = 'bg-gray-50 rounded-lg p-4 border border-gray-200';
+
+                const headName = department.head_of_department
+                    ? `${department.head_of_department.first_name} ${department.head_of_department.last_name}`
+                    : 'Not assigned';
+
+                const assistantName = department.assistant_head
+                    ? `${department.assistant_head.first_name} ${department.assistant_head.last_name}`
+                    : 'Not assigned';
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="font-semibold text-gray-900">${department.name}</h3>
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">${department.code}</span>
+                    </div>
+                    <div class="space-y-2 text-sm">
+                        <div>
+                            <span class="text-gray-600">Head:</span>
+                            <span class="text-gray-900 font-medium">${headName}</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-600">Assistant:</span>
+                            <span class="text-gray-900 font-medium">${assistantName}</span>
+                        </div>
+                        ${department.description ? `<p class="text-xs text-gray-500 mt-2">${department.description}</p>` : ''}
+                    </div>
+                `;
+
+                overviewContainer.appendChild(card);
+            });
+        } catch (error) {
+            console.error('Error loading department overview:', error);
+        }
+    }
+
+    // Load departments from API
+    async function loadDepartments() {
+        try {
+            const response = await fetch('/api/departments');
+            const data = await response.json();
+
+            const departmentSelect = document.getElementById('department');
+            departmentSelect.innerHTML = '<option value="">Select Department</option>';
+
+            data.departments.forEach(department => {
+                const option = document.createElement('option');
+                option.value = department.id;
+
+                // Create department display text with head info
+                let displayText = department.name;
+                if (department.head_of_department) {
+                    displayText += ` (Head: ${department.head_of_department.first_name} ${department.head_of_department.last_name})`;
+                }
+
+                option.textContent = displayText;
+                option.title = `${department.description || ''}\nHead: ${department.head_of_department ? department.head_of_department.first_name + ' ' + department.head_of_department.last_name : 'Not assigned'}\nAssistant: ${department.assistant_head ? department.assistant_head.first_name + ' ' + department.assistant_head.last_name : 'Not assigned'}`;
+                departmentSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading departments:', error);
+        }
+    }
+
+    // Load subjects from API
+    async function loadSubjects(departmentId = '') {
+        try {
+            const url = departmentId ? `/api/subjects?department_id=${departmentId}` : '/api/subjects';
+            const response = await fetch(url);
+            const data = await response.json();
+
+            const subjectsSelect = document.getElementById('subjects');
+            subjectsSelect.innerHTML = '<option value="">Select subjects (hold Ctrl/Cmd for multiple)</option>';
+
+            data.subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject.id;
+                option.textContent = subject.name;
+                subjectsSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading subjects:', error);
+        }
+    }
+
+    // Handle department change to filter subjects
+    document.getElementById('department').addEventListener('change', function() {
+        const departmentId = this.value;
+        if (departmentId) {
+            loadSubjects(departmentId);
+        } else {
+            loadSubjects();
+        }
+    });
+
+    // Form submission
+    addTeacherForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(addTeacherForm);
+
+        // Get selected subjects
+        const subjectsSelect = document.getElementById('subjects');
+        const selectedSubjects = Array.from(subjectsSelect.selectedOptions).map(option => option.value);
+
+        const data = {
+            first_name: formData.get('firstName'),
+            last_name: formData.get('lastName'),
+            email: formData.get('email'),
+            password: formData.get('password'),
+            phone: formData.get('phone'),
+            department_id: formData.get('department'),
+            subject_ids: selectedSubjects
+        };
+
+        try {
+            const response = await fetch('/api/teachers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Teacher added successfully!');
+                closeModal();
+                location.reload(); // Refresh the page to show the new teacher
+            } else {
+                alert('Error: ' + result.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while adding the teacher');
+        }
+    });
+
+    // Search functionality
+    const searchInput = document.querySelector('input[placeholder="Search teachers..."]');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            // Add search functionality here
+            console.log('Searching for:', this.value);
+        });
+    }
+
+    // Select all checkbox functionality
+    const selectAllCheckbox = document.querySelector('thead input[type="checkbox"]');
+    const rowCheckboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+            rowCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+    }
+
+    // Individual checkbox functionality
+    rowCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const checkedBoxes = document.querySelectorAll('tbody input[type="checkbox"]:checked');
+            selectAllCheckbox.checked = checkedBoxes.length === rowCheckboxes.length;
+            selectAllCheckbox.indeterminate = checkedBoxes.length > 0 && checkedBoxes.length < rowCheckboxes.length;
+        });
+    });
+});
+</script>

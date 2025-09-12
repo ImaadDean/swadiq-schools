@@ -115,11 +115,26 @@ CREATE TABLE IF NOT EXISTS student_parents (
     UNIQUE (student_id, parent_id)
 );
 
+-- Departments table
+CREATE TABLE IF NOT EXISTS departments (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(100) NOT NULL,
+    code VARCHAR(20) UNIQUE NOT NULL,
+    description TEXT,
+    head_of_department_id INTEGER REFERENCES users(id),
+    assistant_head_id INTEGER REFERENCES users(id),
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    deleted_at TIMESTAMP WITH TIME ZONE
+);
+
 -- Subjects table
 CREATE TABLE IF NOT EXISTS subjects (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(100) NOT NULL,
     code VARCHAR(20) UNIQUE NOT NULL,
+    department_id UUID REFERENCES departments(id),
     is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -307,6 +322,53 @@ $$;
 -- Insert Roles
 INSERT INTO roles (name) VALUES ('admin'), ('head_teacher'), ('class_teacher'), ('subject_teacher'), ('parent'), ('student') ON CONFLICT (name) DO NOTHING;
 
+-- Insert Departments with heads and assistants
+INSERT INTO departments (name, code, description, head_of_department_id, assistant_head_id) VALUES
+    ('Mathematics', 'MATH', 'Mathematics and related subjects',
+     (SELECT id FROM users WHERE email = 'john.mathematics@swadiqschools.com'),
+     (SELECT id FROM users WHERE email = 'robert.physics@swadiqschools.com')),
+    ('Science', 'SCI', 'Natural sciences including Physics, Chemistry, Biology',
+     (SELECT id FROM users WHERE email = 'mary.science@swadiqschools.com'),
+     (SELECT id FROM users WHERE email = 'jennifer.chemistry@swadiqschools.com')),
+    ('Languages', 'LANG', 'English, Literature, and other languages',
+     (SELECT id FROM users WHERE email = 'david.english@swadiqschools.com'),
+     (SELECT id FROM users WHERE email = 'amanda.literature@swadiqschools.com')),
+    ('Social Studies', 'SOC', 'History, Geography, Civics',
+     (SELECT id FROM users WHERE email = 'sarah.history@swadiqschools.com'),
+     (SELECT id FROM users WHERE email = 'christopher.geography@swadiqschools.com')),
+    ('Arts', 'ARTS', 'Fine Arts, Music, Drama',
+     (SELECT id FROM users WHERE email = 'michael.arts@swadiqschools.com'),
+     (SELECT id FROM users WHERE email = 'jessica.music@swadiqschools.com')),
+    ('Physical Education', 'PE', 'Physical Education and Sports',
+     (SELECT id FROM users WHERE email = 'lisa.pe@swadiqschools.com'),
+     NULL),
+    ('Computer Science', 'CS', 'Computer Science and ICT',
+     (SELECT id FROM users WHERE email = 'james.cs@swadiqschools.com'),
+     NULL),
+    ('Business Studies', 'BUS', 'Business, Economics, Entrepreneurship',
+     (SELECT id FROM users WHERE email = 'emma.business@swadiqschools.com'),
+     (SELECT id FROM users WHERE email = 'daniel.economics@swadiqschools.com'))
+ON CONFLICT (code) DO NOTHING;
+
+-- Insert Subjects
+INSERT INTO subjects (name, code, department_id) VALUES
+    ('Mathematics', 'MATH001', (SELECT id FROM departments WHERE code = 'MATH')),
+    ('Physics', 'SCI001', (SELECT id FROM departments WHERE code = 'SCI')),
+    ('Chemistry', 'SCI002', (SELECT id FROM departments WHERE code = 'SCI')),
+    ('Biology', 'SCI003', (SELECT id FROM departments WHERE code = 'SCI')),
+    ('English Language', 'LANG001', (SELECT id FROM departments WHERE code = 'LANG')),
+    ('Literature', 'LANG002', (SELECT id FROM departments WHERE code = 'LANG')),
+    ('History', 'SOC001', (SELECT id FROM departments WHERE code = 'SOC')),
+    ('Geography', 'SOC002', (SELECT id FROM departments WHERE code = 'SOC')),
+    ('Civics', 'SOC003', (SELECT id FROM departments WHERE code = 'SOC')),
+    ('Fine Arts', 'ARTS001', (SELECT id FROM departments WHERE code = 'ARTS')),
+    ('Music', 'ARTS002', (SELECT id FROM departments WHERE code = 'ARTS')),
+    ('Physical Education', 'PE001', (SELECT id FROM departments WHERE code = 'PE')),
+    ('Computer Science', 'CS001', (SELECT id FROM departments WHERE code = 'CS')),
+    ('Business Studies', 'BUS001', (SELECT id FROM departments WHERE code = 'BUS')),
+    ('Economics', 'BUS002', (SELECT id FROM departments WHERE code = 'BUS'))
+ON CONFLICT (code) DO NOTHING;
+
 -- Insert Permissions
 INSERT INTO permissions (name) VALUES 
     ('users:create'), ('users:read'), ('users:update'), ('users:delete'),
@@ -333,4 +395,38 @@ WITH admin_role AS (SELECT id FROM roles WHERE name = 'admin'),
      new_user AS (SELECT id FROM users WHERE email = 'imaad.ssebintu@gmail.com')
 INSERT INTO user_roles (user_id, role_id)
 SELECT new_user.id, admin_role.id FROM new_user, admin_role
+ON CONFLICT (user_id, role_id) DO NOTHING;
+
+-- Insert demo teachers
+INSERT INTO users (email, password, first_name, last_name, is_active) VALUES
+    ('john.mathematics@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'John', 'Smith', true),
+    ('mary.science@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'Mary', 'Johnson', true),
+    ('david.english@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'David', 'Williams', true),
+    ('sarah.history@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'Sarah', 'Brown', true),
+    ('michael.arts@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'Michael', 'Davis', true),
+    ('lisa.pe@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'Lisa', 'Wilson', true),
+    ('james.cs@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'James', 'Miller', true),
+    ('emma.business@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'Emma', 'Taylor', true),
+    ('robert.physics@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'Robert', 'Anderson', true),
+    ('jennifer.chemistry@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'Jennifer', 'Thomas', true),
+    ('william.biology@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'William', 'Jackson', true),
+    ('amanda.literature@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'Amanda', 'White', true),
+    ('christopher.geography@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'Christopher', 'Harris', true),
+    ('jessica.music@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'Jessica', 'Martin', true),
+    ('daniel.economics@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'Daniel', 'Thompson', true),
+    ('ashley.civics@swadiqschools.com', '$2a$14$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9S2', 'Ashley', 'Garcia', true)
+ON CONFLICT (email) DO NOTHING;
+
+-- Assign class_teacher role to demo teachers
+INSERT INTO user_roles (user_id, role_id)
+SELECT u.id, r.id
+FROM users u, roles r
+WHERE u.email IN (
+    'john.mathematics@swadiqschools.com', 'mary.science@swadiqschools.com', 'david.english@swadiqschools.com',
+    'sarah.history@swadiqschools.com', 'michael.arts@swadiqschools.com', 'lisa.pe@swadiqschools.com',
+    'james.cs@swadiqschools.com', 'emma.business@swadiqschools.com', 'robert.physics@swadiqschools.com',
+    'jennifer.chemistry@swadiqschools.com', 'william.biology@swadiqschools.com', 'amanda.literature@swadiqschools.com',
+    'christopher.geography@swadiqschools.com', 'jessica.music@swadiqschools.com', 'daniel.economics@swadiqschools.com',
+    'ashley.civics@swadiqschools.com'
+) AND r.name = 'class_teacher'
 ON CONFLICT (user_id, role_id) DO NOTHING;

@@ -22,13 +22,13 @@ const (
 type DayOfWeek string
 
 const (
-	Monday    DayOfWeek = "Monday"
-	Tuesday   DayOfWeek = "Tuesday"
-	Wednesday DayOfWeek = "Wednesday"
-	Thursday  DayOfWeek = "Thursday"
-	Friday    DayOfWeek = "Friday"
-	Saturday  DayOfWeek = "Saturday"
-	Sunday    DayOfWeek = "Sunday"
+	Monday    DayOfWeek = "monday"
+	Tuesday   DayOfWeek = "tuesday"
+	Wednesday DayOfWeek = "wednesday"
+	Thursday  DayOfWeek = "thursday"
+	Friday    DayOfWeek = "friday"
+	Saturday  DayOfWeek = "saturday"
+	Sunday    DayOfWeek = "sunday"
 )
 
 // Gender defines the possible gender values for a student.
@@ -44,10 +44,20 @@ const (
 type RelationshipType string
 
 const (
-	Father   RelationshipType = "Father"
-	Mother   RelationshipType = "Mother"
-	Guardian RelationshipType = "Guardian"
-	Brother  RelationshipType = "Brother"
-	Sister   RelationshipType = "Sister"
-	OtherRel RelationshipType = "Other"
+	Father   RelationshipType = "father"
+	Mother   RelationshipType = "mother"
+	Guardian RelationshipType = "guardian"
+	Brother  RelationshipType = "brother"
+	Sister   RelationshipType = "sister"
+	OtherRel RelationshipType = "other"
+)
+
+// PaymentStatus defines the status of a payment
+type PaymentStatus string
+
+const (
+	PaymentPending   PaymentStatus = "pending"
+	PaymentCompleted PaymentStatus = "completed"
+	PaymentFailed    PaymentStatus = "failed"
+	PaymentRefunded  PaymentStatus = "refunded"
 )

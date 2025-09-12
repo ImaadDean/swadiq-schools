@@ -26,7 +26,15 @@ func SetupStudentsRoutes(app *fiber.App) {
 func StudentsPage(c *fiber.Ctx) error {
 	students, err := database.GetAllStudents(config.GetDB())
 	if err != nil {
-		return c.Status(500).Render("error", fiber.Map{"error": "Failed to load students"})
+		return c.Status(500).Render("error", fiber.Map{
+			"Title":        "Error - Swadiq Schools",
+			"CurrentPage":  "students",
+			"ErrorCode":    "500",
+			"ErrorTitle":   "Database Error",
+			"ErrorMessage": "Failed to load students. Please try again later.",
+			"ShowRetry":    true,
+			"user":         c.Locals("user"),
+		})
 	}
 
 	return c.Render("students/index", fiber.Map{

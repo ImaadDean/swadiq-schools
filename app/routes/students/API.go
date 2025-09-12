@@ -4,6 +4,7 @@ import (
 	"swadiq-schools/app/config"
 	"swadiq-schools/app/database"
 	"swadiq-schools/app/models"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -49,7 +50,9 @@ func CreateStudentAPI(c *fiber.Ctx) error {
 	}
 
 	if req.DateOfBirth != "" {
-		student.DateOfBirth = &req.DateOfBirth
+		if parsedDate, err := time.Parse("2006-01-02", req.DateOfBirth); err == nil {
+			student.DateOfBirth = &parsedDate
+		}
 	}
 	if req.Gender != "" {
 		gender := models.Gender(req.Gender)

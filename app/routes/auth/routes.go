@@ -2,6 +2,7 @@ package auth
 
 import (
 	"database/sql"
+	"strings"
 	"swadiq-schools/app/config"
 	"swadiq-schools/app/database"
 	"swadiq-schools/app/models"
@@ -58,28 +59,62 @@ func ShowProfilePage(c *fiber.Ctx) error {
 // AuthMiddleware validates session and sets user context
 func AuthMiddleware(c *fiber.Ctx) error {
 	sessionID := c.Cookies("session_id")
+
+	// Check if this is an API request
+	isAPIRequest := strings.HasPrefix(c.Path(), "/api/")
+
 	if sessionID == "" {
-		return c.Status(401).JSON(fiber.Map{"error": "No session found"})
+		if isAPIRequest {
+			return c.Status(401).JSON(fiber.Map{"error": "No session found"})
+		}
+		// For web pages, redirect to login
+		return c.Redirect("/auth/login")
 	}
 
 	session, err := database.GetSessionByID(config.GetDB(), sessionID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return c.Status(401).JSON(fiber.Map{"error": "Invalid session"})
+			if isAPIRequest {
+				return c.Status(401).JSON(fiber.Map{"error": "Invalid session"})
+			}
+			// For web pages, redirect to login
+			return c.Redirect("/auth/login")
 		}
-		return c.Status(500).JSON(fiber.Map{"error": "Database error"})
+		if isAPIRequest {
+			return c.Status(500).JSON(fiber.Map{"error": "Database error"})
+		}
+		// For web pages, show error page
+		return c.Status(500).Render("error", fiber.Map{
+			"Title":        "Error - Swadiq Schools",
+			"ErrorCode":    "500",
+			"ErrorTitle":   "Database Error",
+			"ErrorMessage": "Unable to verify your session. Please try logging in again.",
+		})
 	}
 
 	// Get user details by ID
 	user, err := database.GetUserByID(config.GetDB(), session.UserID)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": "User not found"})
+		if isAPIRequest {
+			return c.Status(500).JSON(fiber.Map{"error": "User not found"})
+		}
+		// For web pages, redirect to login
+		return c.Redirect("/auth/login")
 	}
 
 	// Get user roles
 	roles, err := database.GetUserRoles(config.GetDB(), session.UserID)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": "Failed to get user roles"})
+		if isAPIRequest {
+			return c.Status(500).JSON(fiber.Map{"error": "Failed to get user roles"})
+		}
+		// For web pages, show error page
+		return c.Status(500).Render("error", fiber.Map{
+			"Title":        "Error - Swadiq Schools",
+			"ErrorCode":    "500",
+			"ErrorTitle":   "Authorization Error",
+			"ErrorMessage": "Unable to load user permissions. Please try logging in again.",
+		})
 	}
 
 	// Set user context
@@ -97,7 +132,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 func RoleMiddleware(allowedRoles ...string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		userRoles := c.Locals("user_roles").([]*models.Role)
-		
+
 		for _, userRole := range userRoles {
 			for _, allowedRole := range allowedRoles {
 				if userRole.Name == allowedRole {
@@ -105,8 +140,23 @@ func RoleMiddleware(allowedRoles ...string) fiber.Handler {
 				}
 			}
 		}
-		
-		return c.Status(403).JSON(fiber.Map{"error": "Insufficient permissions"})
+
+		// Check if this is an API request
+		isAPIRequest := strings.HasPrefix(c.Path(), "/api/")
+
+		if isAPIRequest {
+			return c.Status(403).JSON(fiber.Map{"error": "Insufficient permissions"})
+		}
+
+		// For web pages, show 403 error page
+		return c.Status(403).Render("error", fiber.Map{
+			"Title":        "Access Forbidden - Swadiq Schools",
+			"CurrentPage":  "",
+			"ErrorCode":    "403",
+			"ErrorTitle":   "Access Forbidden",
+			"ErrorMessage": "You don't have permission to access this resource.",
+			"user":         c.Locals("user"),
+		})
 	}
 }
 

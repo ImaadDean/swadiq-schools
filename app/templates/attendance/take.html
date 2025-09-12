@@ -1,0 +1,272 @@
+<div class="p-6 space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+            <a href="/attendance/class/{{.class.ID}}" class="inline-flex items-center text-gray-600 hover:text-gray-900">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back to Class
+            </a>
+            <div class="h-6 border-l border-gray-300"></div>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Take Attendance</h1>
+                <p class="text-gray-600 mt-1">{{.class.Name}} - {{.date}}</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3">
+            <button onclick="saveAllAttendance()" 
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                <i class="fas fa-save mr-2"></i>
+                Save Attendance
+            </button>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-lg border border-gray-200 p-4">
+        <div class="flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-gray-900">Quick Actions</h2>
+            <div class="flex space-x-2">
+                <button onclick="markAll('present')" 
+                        class="inline-flex items-center px-3 py-2 border border-green-300 text-sm font-medium rounded-md text-green-700 bg-green-50 hover:bg-green-100">
+                    <i class="fas fa-check mr-2"></i>
+                    All Present
+                </button>
+                <button onclick="markAll('absent')" 
+                        class="inline-flex items-center px-3 py-2 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100">
+                    <i class="fas fa-times mr-2"></i>
+                    All Absent
+                </button>
+                <button onclick="clearAll()" 
+                        class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    <i class="fas fa-eraser mr-2"></i>
+                    Clear All
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Form -->
+    <div class="bg-white rounded-lg border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-900">Student Attendance</h2>
+                    <p class="text-sm text-gray-600 mt-1">Mark attendance for each student</p>
+                </div>
+                <div class="flex items-center space-x-4 text-sm">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                        <span class="text-gray-600">Present: <span id="presentCount">0</span></span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                        <span class="text-gray-600">Absent: <span id="absentCount">0</span></span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+                        <span class="text-gray-600">Late: <span id="lateCount">0</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="p-6">
+            {{if .students}}
+                <div class="space-y-4">
+                    {{range .students}}
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors duration-200" data-student-id="{{.ID}}">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-gray-600"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="font-medium text-gray-900">{{.FirstName}} {{.LastName}}</h3>
+                                <p class="text-sm text-gray-600">Student ID: {{.StudentID}}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-2">
+                            <div class="flex bg-gray-100 rounded-lg p-1">
+                                <button type="button" 
+                                        onclick="setAttendance('{{.ID}}', 'present')"
+                                        class="attendance-btn px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{if index $.attendanceMap .ID | eq "present"}}bg-green-500 text-white{{else}}text-gray-700 hover:bg-green-100{{end}}"
+                                        data-status="present">
+                                    <i class="fas fa-check mr-1"></i>
+                                    Present
+                                </button>
+                                <button type="button" 
+                                        onclick="setAttendance('{{.ID}}', 'absent')"
+                                        class="attendance-btn px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{if index $.attendanceMap .ID | eq "absent"}}bg-red-500 text-white{{else}}text-gray-700 hover:bg-red-100{{end}}"
+                                        data-status="absent">
+                                    <i class="fas fa-times mr-1"></i>
+                                    Absent
+                                </button>
+                                <button type="button" 
+                                        onclick="setAttendance('{{.ID}}', 'late')"
+                                        class="attendance-btn px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{if index $.attendanceMap .ID | eq "late"}}bg-yellow-500 text-white{{else}}text-gray-700 hover:bg-yellow-100{{end}}"
+                                        data-status="late">
+                                    <i class="fas fa-clock mr-1"></i>
+                                    Late
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+            {{else}}
+                <div class="text-center py-12">
+                    <div class="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user-graduate text-gray-400 text-xl"></i>
+                    </div>
+                    <h3 class="mt-4 text-lg font-medium text-gray-900">No Students Found</h3>
+                    <p class="mt-2 text-gray-600">No students are enrolled in this class.</p>
+                </div>
+            {{end}}
+        </div>
+    </div>
+
+    <!-- Save Button (Fixed at bottom) -->
+    <div class="fixed bottom-6 right-6">
+        <button onclick="saveAllAttendance()" 
+                class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+            <i class="fas fa-save mr-2"></i>
+            Save Attendance
+        </button>
+    </div>
+</div>
+
+<script>
+const classId = '{{.class.ID}}';
+const attendanceDate = '{{.date}}';
+const attendanceData = {};
+
+// Initialize attendance data from existing records
+{{range .students}}
+    {{$status := index $.attendanceMap .ID}}
+    {{if $status}}
+        attendanceData['{{.ID}}'] = '{{$status}}';
+    {{end}}
+{{end}}
+
+function setAttendance(studentId, status) {
+    attendanceData[studentId] = status;
+    
+    // Update button styles
+    const studentRow = document.querySelector(`[data-student-id="${studentId}"]`);
+    const buttons = studentRow.querySelectorAll('.attendance-btn');
+    
+    buttons.forEach(btn => {
+        const btnStatus = btn.getAttribute('data-status');
+        btn.className = 'attendance-btn px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200';
+        
+        if (btnStatus === status) {
+            if (status === 'present') {
+                btn.className += ' bg-green-500 text-white';
+            } else if (status === 'absent') {
+                btn.className += ' bg-red-500 text-white';
+            } else if (status === 'late') {
+                btn.className += ' bg-yellow-500 text-white';
+            }
+        } else {
+            btn.className += ' text-gray-700';
+            if (btnStatus === 'present') {
+                btn.className += ' hover:bg-green-100';
+            } else if (btnStatus === 'absent') {
+                btn.className += ' hover:bg-red-100';
+            } else if (btnStatus === 'late') {
+                btn.className += ' hover:bg-yellow-100';
+            }
+        }
+    });
+    
+    updateCounts();
+}
+
+function markAll(status) {
+    const students = document.querySelectorAll('[data-student-id]');
+    students.forEach(studentRow => {
+        const studentId = studentRow.getAttribute('data-student-id');
+        setAttendance(studentId, status);
+    });
+}
+
+function clearAll() {
+    const students = document.querySelectorAll('[data-student-id]');
+    students.forEach(studentRow => {
+        const studentId = studentRow.getAttribute('data-student-id');
+        delete attendanceData[studentId];
+        
+        // Reset button styles
+        const buttons = studentRow.querySelectorAll('.attendance-btn');
+        buttons.forEach(btn => {
+            const btnStatus = btn.getAttribute('data-status');
+            btn.className = 'attendance-btn px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 text-gray-700';
+            if (btnStatus === 'present') {
+                btn.className += ' hover:bg-green-100';
+            } else if (btnStatus === 'absent') {
+                btn.className += ' hover:bg-red-100';
+            } else if (btnStatus === 'late') {
+                btn.className += ' hover:bg-yellow-100';
+            }
+        });
+    });
+    
+    updateCounts();
+}
+
+function updateCounts() {
+    const counts = { present: 0, absent: 0, late: 0 };
+    
+    Object.values(attendanceData).forEach(status => {
+        if (counts.hasOwnProperty(status)) {
+            counts[status]++;
+        }
+    });
+    
+    document.getElementById('presentCount').textContent = counts.present;
+    document.getElementById('absentCount').textContent = counts.absent;
+    document.getElementById('lateCount').textContent = counts.late;
+}
+
+async function saveAllAttendance() {
+    const records = Object.entries(attendanceData).map(([studentId, status]) => ({
+        student_id: studentId,
+        status: status
+    }));
+    
+    if (records.length === 0) {
+        alert('Please mark attendance for at least one student');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/attendance', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                class_id: classId,
+                date: attendanceDate,
+                records: records
+            })
+        });
+        
+        if (response.ok) {
+            alert('Attendance saved successfully!');
+            window.location.href = `/attendance/class/${classId}`;
+        } else {
+            const error = await response.json();
+            alert('Error: ' + (error.error || 'Failed to save attendance'));
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Network error occurred');
+    }
+}
+
+// Initialize counts on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateCounts();
+});
+</script>

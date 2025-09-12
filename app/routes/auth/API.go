@@ -2,7 +2,6 @@ package auth
 
 import (
 	"database/sql"
-	"strconv"
 	"swadiq-schools/app/config"
 	"swadiq-schools/app/database"
 	"time"
@@ -33,12 +32,7 @@ func LoginAPI(c *fiber.Ctx) error {
 		return c.Status(401).JSON(fiber.Map{"error": "Invalid credentials"})
 	}
 
-	userIDInt, err := strconv.Atoi(user.ID)
-	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": "Invalid user ID"})
-	}
-
-	roles, err := database.GetUserRoles(config.GetDB(), userIDInt)
+	roles, err := database.GetUserRoles(config.GetDB(), user.ID)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to get user roles"})
 	}
@@ -47,7 +41,7 @@ func LoginAPI(c *fiber.Ctx) error {
 	sessionID := GenerateSessionID()
 	expiresAt := GetSessionExpiry()
 
-	if err := database.CreateSession(config.GetDB(), sessionID, userIDInt, expiresAt); err != nil {
+	if err := database.CreateSession(config.GetDB(), sessionID, user.ID, expiresAt); err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to create session"})
 	}
 
@@ -93,7 +87,7 @@ func ChangePasswordAPI(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "Invalid request"})
 	}
 
-	userID := c.Locals("user_id").(int)
+	userID := c.Locals("user_id").(string)
 
 	// Get current user to verify current password
 	user, err := database.GetUserByEmail(config.GetDB(), c.Locals("user_email").(string))
@@ -151,14 +145,8 @@ func ForgotPasswordAPI(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to hash password"})
 	}
 
-	// Convert user ID to int
-	userIDInt, err := strconv.Atoi(user.ID)
-	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": "Invalid user ID"})
-	}
-
 	// Update password
-	if err := database.UpdateUserPassword(config.GetDB(), userIDInt, hashedPassword); err != nil {
+	if err := database.UpdateUserPassword(config.GetDB(), user.ID, hashedPassword); err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to update password"})
 	}
 
