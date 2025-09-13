@@ -233,12 +233,20 @@ async function saveAllAttendance() {
         student_id: studentId,
         status: status
     }));
-    
+
     if (records.length === 0) {
         alert('Please mark attendance for at least one student');
         return;
     }
-    
+
+    // Find and set loading state for save button
+    const saveBtn = document.querySelector('button[onclick="saveAllAttendance()"]');
+    if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
+        saveBtn.classList.add('opacity-75', 'cursor-not-allowed');
+    }
+
     try {
         const response = await fetch('/api/attendance', {
             method: 'POST',
@@ -251,7 +259,7 @@ async function saveAllAttendance() {
                 records: records
             })
         });
-        
+
         if (response.ok) {
             alert('Attendance saved successfully!');
             window.location.href = `/attendance/class/${classId}`;
@@ -262,6 +270,13 @@ async function saveAllAttendance() {
     } catch (error) {
         console.error('Error:', error);
         alert('Network error occurred');
+    } finally {
+        // Reset button state
+        if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<i class="fas fa-save mr-2"></i>Save Attendance';
+            saveBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+        }
     }
 }
 

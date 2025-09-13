@@ -11,9 +11,9 @@
                 <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 text-sm">
                     <i class="fas fa-download mr-2"></i>Export
                 </button>
-                <a href="/students/add" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200 text-sm">
+                <button id="addStudentBtn" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200 text-sm">
                     <i class="fas fa-plus mr-2"></i>Add Student
-                </a>
+                </button>
             </div>
         </div>
     </div>
@@ -84,23 +84,6 @@
                     <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 </div>
                 
-                <!-- Grade Filter -->
-                <select class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white">
-                    <option value="">All Grades</option>
-                    <option value="1">Grade 1</option>
-                    <option value="2">Grade 2</option>
-                    <option value="3">Grade 3</option>
-                    <option value="4">Grade 4</option>
-                    <option value="5">Grade 5</option>
-                    <option value="6">Grade 6</option>
-                    <option value="7">Grade 7</option>
-                    <option value="8">Grade 8</option>
-                    <option value="9">Grade 9</option>
-                    <option value="10">Grade 10</option>
-                    <option value="11">Grade 11</option>
-                    <option value="12">Grade 12</option>
-                </select>
-
                 <!-- Status Filter -->
                 <select class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white">
                     <option value="">All Status</option>
@@ -128,137 +111,43 @@
             <table class="w-full">
                 <thead class="bg-gray-50 border-b border-gray-200">
                     <tr>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <input type="checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
-                        </th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student ID</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parent/Guardian</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <!-- Sample Student Row 1 -->
-                    <tr class="hover:bg-gray-50 transition-colors duration-200">
-                        <td class="px-4 py-3">
-                            <input type="checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
-                        </td>
-                        <td class="px-4 py-3">
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                                    <span class="text-white text-sm font-medium">SJ</span>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm font-medium text-gray-900">Sarah Johnson</p>
-                                    <p class="text-xs text-gray-500">sarah.johnson@email.com</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-4 py-3 text-sm text-gray-900">STU-2024-001</td>
-                        <td class="px-4 py-3 text-sm text-gray-900">Grade 9</td>
-                        <td class="px-4 py-3 text-sm text-gray-900">9-A</td>
-                        <td class="px-4 py-3">
-                            <p class="text-sm text-gray-900">Michael Johnson</p>
-                            <p class="text-xs text-gray-500">+1 (555) 123-4567</p>
-                        </td>
-                        <td class="px-4 py-3">
-                            <span class="inline-flex px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Active</span>
-                        </td>
-                        <td class="px-4 py-3">
-                            <div class="flex items-center space-x-2">
-                                <button class="p-1 text-gray-400 hover:text-blue-600 transition-colors duration-200" title="View">
-                                    <i class="fas fa-eye text-sm"></i>
-                                </button>
-                                <button class="p-1 text-gray-400 hover:text-green-600 transition-colors duration-200" title="Edit">
-                                    <i class="fas fa-edit text-sm"></i>
-                                </button>
-                                <button class="p-1 text-gray-400 hover:text-red-600 transition-colors duration-200" title="Delete">
-                                    <i class="fas fa-trash text-sm"></i>
-                                </button>
+                <tbody id="studentsTableBody" class="bg-white divide-y divide-gray-200">
+                    <!-- Loading state -->
+                    <tr id="loadingRow">
+                        <td colspan="6" class="px-4 py-8 text-center">
+                            <div class="flex items-center justify-center">
+                                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
+                                <span class="ml-2 text-gray-500">Loading students...</span>
                             </div>
                         </td>
                     </tr>
-
-                    <!-- Sample Student Row 2 -->
-                    <tr class="hover:bg-gray-50 transition-colors duration-200">
-                        <td class="px-4 py-3">
-                            <input type="checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
-                        </td>
-                        <td class="px-4 py-3">
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
-                                    <span class="text-white text-sm font-medium">JS</span>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm font-medium text-gray-900">John Smith</p>
-                                    <p class="text-xs text-gray-500">john.smith@email.com</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-4 py-3 text-sm text-gray-900">STU-2024-002</td>
-                        <td class="px-4 py-3 text-sm text-gray-900">Grade 8</td>
-                        <td class="px-4 py-3 text-sm text-gray-900">8-B</td>
-                        <td class="px-4 py-3">
-                            <p class="text-sm text-gray-900">Robert Smith</p>
-                            <p class="text-xs text-gray-500">+1 (555) 987-6543</p>
-                        </td>
-                        <td class="px-4 py-3">
-                            <span class="inline-flex px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Active</span>
-                        </td>
-                        <td class="px-4 py-3">
-                            <div class="flex items-center space-x-2">
-                                <button class="p-1 text-gray-400 hover:text-blue-600 transition-colors duration-200" title="View">
-                                    <i class="fas fa-eye text-sm"></i>
-                                </button>
-                                <button class="p-1 text-gray-400 hover:text-green-600 transition-colors duration-200" title="Edit">
-                                    <i class="fas fa-edit text-sm"></i>
-                                </button>
-                                <button class="p-1 text-gray-400 hover:text-red-600 transition-colors duration-200" title="Delete">
-                                    <i class="fas fa-trash text-sm"></i>
-                                </button>
+                    <!-- Empty state -->
+                    <tr id="emptyRow" class="hidden">
+                        <td colspan="6" class="px-4 py-8 text-center">
+                            <div class="text-gray-500">
+                                <i class="fas fa-users text-4xl mb-2"></i>
+                                <p class="text-lg font-medium">No students found</p>
+                                <p class="text-sm">Add your first student to get started.</p>
                             </div>
                         </td>
                     </tr>
-
-                    <!-- Sample Student Row 3 -->
-                    <tr class="hover:bg-gray-50 transition-colors duration-200">
-                        <td class="px-4 py-3">
-                            <input type="checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
-                        </td>
-                        <td class="px-4 py-3">
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
-                                    <span class="text-white text-sm font-medium">EB</span>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm font-medium text-gray-900">Emily Brown</p>
-                                    <p class="text-xs text-gray-500">emily.brown@email.com</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-4 py-3 text-sm text-gray-900">STU-2024-003</td>
-                        <td class="px-4 py-3 text-sm text-gray-900">Grade 10</td>
-                        <td class="px-4 py-3 text-sm text-gray-900">10-A</td>
-                        <td class="px-4 py-3">
-                            <p class="text-sm text-gray-900">Lisa Brown</p>
-                            <p class="text-xs text-gray-500">+1 (555) 456-7890</p>
-                        </td>
-                        <td class="px-4 py-3">
-                            <span class="inline-flex px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">Pending</span>
-                        </td>
-                        <td class="px-4 py-3">
-                            <div class="flex items-center space-x-2">
-                                <button class="p-1 text-gray-400 hover:text-blue-600 transition-colors duration-200" title="View">
-                                    <i class="fas fa-eye text-sm"></i>
-                                </button>
-                                <button class="p-1 text-gray-400 hover:text-green-600 transition-colors duration-200" title="Edit">
-                                    <i class="fas fa-edit text-sm"></i>
-                                </button>
-                                <button class="p-1 text-gray-400 hover:text-red-600 transition-colors duration-200" title="Delete">
-                                    <i class="fas fa-trash text-sm"></i>
+                    <!-- Error state -->
+                    <tr id="errorRow" class="hidden">
+                        <td colspan="6" class="px-4 py-8 text-center">
+                            <div class="text-red-500">
+                                <i class="fas fa-exclamation-triangle text-4xl mb-2"></i>
+                                <p class="text-lg font-medium">Error loading students</p>
+                                <p class="text-sm">Please try refreshing the page.</p>
+                                <button onclick="loadStudents()" class="mt-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700">
+                                    Retry
                                 </button>
                             </div>
                         </td>
@@ -291,9 +180,868 @@
     </div>
 </div>
 
+<!-- Add Student Modal -->
+<div id="addStudentModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-900">Add New Student</h2>
+            <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <form id="addStudentForm" class="p-6 space-y-6">
+            <!-- Student Information -->
+            <div>
+                <h3 class="text-md font-medium text-gray-900 mb-4">Student Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="studentId" class="block text-sm font-medium text-gray-700 mb-2">
+                            Student ID
+                            <span class="text-xs text-gray-500">(Auto-generated)</span>
+                        </label>
+                        <input type="text" id="studentId" name="studentId" readonly
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
+                               placeholder="STU-2025-001 (will be auto-generated)">
+                    </div>
+                    <div>
+                        <label for="classId" class="block text-sm font-medium text-gray-700 mb-2">Class</label>
+                        <select id="classId" name="classId"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                            <option value="">Select Class</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal Information -->
+            <div>
+                <h3 class="text-md font-medium text-gray-900 mb-4">Personal Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                        <input type="text" id="firstName" name="firstName" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                               placeholder="Enter first name">
+                    </div>
+                    <div>
+                        <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                        <input type="text" id="lastName" name="lastName" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                               placeholder="Enter last name">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label for="dateOfBirth" class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+                        <input type="date" id="dateOfBirth" name="dateOfBirth"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label for="gender" class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+                        <select id="gender" name="gender"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div>
+                <h3 class="text-md font-medium text-gray-900 mb-4">Contact Information</h3>
+                <div class="grid grid-cols-1 gap-4">
+                    <div>
+                        <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                        <textarea id="address" name="address" rows="3"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                  placeholder="Enter student address"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Parent/Guardian</label>
+                        <div class="flex space-x-2">
+                            <!-- Hidden input to store selected parent ID -->
+                            <input type="hidden" id="parentId" name="parentId" value="">
+
+                            <!-- Selected parent display -->
+                            <div id="selectedParentDisplay" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 text-sm">
+                                No parent selected
+                            </div>
+
+                            <button type="button" id="searchParentBtn" class="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm whitespace-nowrap">
+                                <i class="fas fa-search mr-1"></i>Search
+                            </button>
+                            <button type="button" id="addParentBtn" class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 text-sm whitespace-nowrap">
+                                <i class="fas fa-plus mr-1"></i>Add New
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="parentRelationship" class="block text-sm font-medium text-gray-700 mb-2">Relationship</label>
+                        <select id="parentRelationship" name="parentRelationship"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                            <option value="">Select Relationship</option>
+                            <option value="father">Father</option>
+                            <option value="mother">Mother</option>
+                            <option value="guardian">Guardian</option>
+                            <option value="brother">Brother</option>
+                            <option value="sister">Sister</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
+                <button type="button" id="cancelBtn" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200">
+                    Cancel
+                </button>
+                <button type="submit" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200">
+                    <i class="fas fa-plus mr-2"></i>Add Student
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Parent Search Modal -->
+<div id="parentSearchModal" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-900">Select Parent/Guardian</h2>
+            <button id="closeParentSearchBtn" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-6">
+            <!-- Search Bar -->
+            <div class="mb-6">
+                <div class="relative">
+                    <input type="text" id="parentSearchInput" placeholder="Search parents by name, email, or phone..."
+                           class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+
+            <!-- Loading Skeleton for Parents -->
+            <div id="parentsLoading" class="space-y-3 max-h-96 overflow-y-auto">
+                <div class="animate-pulse space-y-3">
+                    <!-- Parent Item Skeleton -->
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
+                            <div>
+                                <div class="h-4 bg-gray-200 rounded w-32 mb-1"></div>
+                                <div class="h-3 bg-gray-200 rounded w-48"></div>
+                            </div>
+                        </div>
+                        <div class="w-16 h-8 bg-gray-200 rounded"></div>
+                    </div>
+
+                    <!-- Repeat for more skeleton items -->
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
+                            <div>
+                                <div class="h-4 bg-gray-200 rounded w-28 mb-1"></div>
+                                <div class="h-3 bg-gray-200 rounded w-40"></div>
+                            </div>
+                        </div>
+                        <div class="w-16 h-8 bg-gray-200 rounded"></div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
+                            <div>
+                                <div class="h-4 bg-gray-200 rounded w-36 mb-1"></div>
+                                <div class="h-3 bg-gray-200 rounded w-44"></div>
+                            </div>
+                        </div>
+                        <div class="w-16 h-8 bg-gray-200 rounded"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parents List -->
+            <div id="parentsList" class="space-y-3 max-h-96 overflow-y-auto hidden">
+                <!-- Parents will be loaded here -->
+            </div>
+
+            <!-- No Results -->
+            <div id="noParentsFound" class="hidden text-center py-8">
+                <i class="fas fa-users text-gray-300 text-4xl mb-4"></i>
+                <p class="text-gray-500">No parents found</p>
+                <button type="button" id="createNewParentBtn" class="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">
+                    <i class="fas fa-plus mr-2"></i>Create New Parent
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Parent Modal -->
+<div id="addParentModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-900">Add New Parent/Guardian</h2>
+            <button id="closeParentModalBtn" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <form id="addParentForm" class="p-6 space-y-6">
+            <!-- Personal Information -->
+            <div>
+                <h3 class="text-md font-medium text-gray-900 mb-4">Personal Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="parentFirstName" class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                        <input type="text" id="parentFirstName" name="firstName" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                               placeholder="Enter first name">
+                    </div>
+                    <div>
+                        <label for="parentLastName" class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                        <input type="text" id="parentLastName" name="lastName" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                               placeholder="Enter last name">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div>
+                <h3 class="text-md font-medium text-gray-900 mb-4">Contact Information</h3>
+                <div class="grid grid-cols-1 gap-4">
+                    <div>
+                        <label for="parentPhone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                        <input type="tel" id="parentPhone" name="phone"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                               placeholder="Enter phone number">
+                    </div>
+                    <div>
+                        <label for="parentEmail" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <input type="email" id="parentEmail" name="email"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                               placeholder="Enter email address">
+                    </div>
+                    <div>
+                        <label for="parentAddress" class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                        <textarea id="parentAddress" name="address" rows="3"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                  placeholder="Enter address"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
+                <button type="button" id="cancelParentBtn" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200">
+                    Cancel
+                </button>
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">
+                    <i class="fas fa-plus mr-2"></i>Add Parent
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Search Parent Modal -->
+<div id="searchParentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4">
+        <!-- Modal Header -->
+        <div class="flex justify-between items-center p-6 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Search & Select Parent/Guardian</h3>
+            <button type="button" id="closeSearchParentModalBtn" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-6">
+            <!-- Search Input -->
+            <div class="mb-4">
+                <div class="relative">
+                    <input type="text" id="parentSearchInput"
+                           class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                           placeholder="Search by name, phone, or email...">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Results -->
+            <div class="border border-gray-200 rounded-lg max-h-96 overflow-y-auto">
+                <div id="parentSearchResults" class="divide-y divide-gray-200">
+                    <!-- Loading state -->
+                    <div id="parentSearchLoading" class="hidden p-4 text-center text-gray-500">
+                        <i class="fas fa-spinner fa-spin mr-2"></i>Searching...
+                    </div>
+
+                    <!-- Empty state -->
+                    <div id="parentSearchEmpty" class="p-8 text-center text-gray-500">
+                        <i class="fas fa-search text-3xl mb-3 text-gray-300"></i>
+                        <p>Start typing to search for parents...</p>
+                    </div>
+
+                    <!-- No results -->
+                    <div id="parentSearchNoResults" class="hidden p-8 text-center text-gray-500">
+                        <i class="fas fa-user-slash text-3xl mb-3 text-gray-300"></i>
+                        <p>No parents found matching your search.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="flex items-center justify-end space-x-3 p-6 border-t border-gray-200">
+            <button type="button" id="cancelSearchParentBtn" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
+// Loading utility functions
+function setButtonLoading(button, isLoading, originalText = null) {
+    if (isLoading) {
+        button.disabled = true;
+        button.dataset.originalText = originalText || button.textContent;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Loading...';
+        button.classList.add('opacity-75', 'cursor-not-allowed');
+    } else {
+        button.disabled = false;
+        button.innerHTML = button.dataset.originalText || originalText;
+        button.classList.remove('opacity-75', 'cursor-not-allowed');
+    }
+}
+
 // Initialize students page functionality
 document.addEventListener('DOMContentLoaded', function() {
+    // Modal elements
+    const addStudentBtn = document.getElementById('addStudentBtn');
+    const addStudentModal = document.getElementById('addStudentModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const addStudentForm = document.getElementById('addStudentForm');
+
+    // Parent modal elements
+    const addParentBtn = document.getElementById('addParentBtn');
+    const addParentModal = document.getElementById('addParentModal');
+    const closeParentModalBtn = document.getElementById('closeParentModalBtn');
+    const cancelParentBtn = document.getElementById('cancelParentBtn');
+    const addParentForm = document.getElementById('addParentForm');
+
+    // Search parent modal elements
+    const searchParentBtn = document.getElementById('searchParentBtn');
+    const parentSearchModal = document.getElementById('parentSearchModal');
+    const closeParentSearchBtn = document.getElementById('closeParentSearchBtn');
+    const parentSearchInput = document.getElementById('parentSearchInput');
+    const parentsList = document.getElementById('parentsList');
+    const noParentsFound = document.getElementById('noParentsFound');
+
+    // Load classes and students on page load
+    loadClasses();
+    loadStudents();
+
+    // Student ID functionality
+    const studentIdInput = document.getElementById('studentId');
+
+    // Set dynamic placeholder with current year
+    function updateStudentIdPlaceholder() {
+        const currentYear = new Date().getFullYear();
+        studentIdInput.placeholder = `STU-${currentYear}-001 (will be auto-generated)`;
+    }
+
+    // Update placeholder on page load
+    updateStudentIdPlaceholder();
+
+    // Modal functionality
+    function openModal() {
+        addStudentModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        addStudentModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        addStudentForm.reset();
+        clearSelectedParent();
+        // Reset student ID field and update placeholder
+        studentIdInput.value = '';
+        updateStudentIdPlaceholder();
+    }
+
+    // Event listeners for modal
+    addStudentBtn.addEventListener('click', openModal);
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+
+    // Close modal when clicking outside
+    addStudentModal.addEventListener('click', function(e) {
+        if (e.target === addStudentModal) {
+            closeModal();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (!addStudentModal.classList.contains('hidden')) {
+                closeModal();
+            }
+            if (!addParentModal.classList.contains('hidden')) {
+                closeParentModal();
+            }
+        }
+    });
+
+    // Parent Modal functionality
+    function openParentModal() {
+        addParentModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeParentModal() {
+        addParentModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        addParentForm.reset();
+    }
+
+    // Event listeners for parent modal
+    addParentBtn.addEventListener('click', openParentModal);
+    closeParentModalBtn.addEventListener('click', closeParentModal);
+    cancelParentBtn.addEventListener('click', closeParentModal);
+
+    // Close parent modal when clicking outside
+    addParentModal.addEventListener('click', function(e) {
+        if (e.target === addParentModal) {
+            closeParentModal();
+        }
+    });
+
+    // Parent Search Modal functionality
+    function openParentSearchModal() {
+        parentSearchModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        parentSearchInput.focus();
+
+        // Show loading skeleton initially
+        document.getElementById('parentsLoading').classList.remove('hidden');
+        document.getElementById('parentsList').classList.add('hidden');
+        document.getElementById('noParentsFound').classList.add('hidden');
+
+        loadParents();
+    }
+
+    function closeParentSearchModal() {
+        parentSearchModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        parentSearchInput.value = '';
+        parentsList.innerHTML = '';
+
+        // Reset loading states
+        document.getElementById('parentsLoading').classList.add('hidden');
+        document.getElementById('parentsList').classList.add('hidden');
+        document.getElementById('noParentsFound').classList.add('hidden');
+    }
+
+    // Load parents for selection
+    async function loadParents(search = '') {
+        try {
+            const url = search ? `/api/parents?search=${encodeURIComponent(search)}` : '/api/parents';
+            const response = await fetch(url);
+
+            if (response.ok) {
+                const data = await response.json();
+                displayParents(data.parents);
+            } else {
+                console.error('Failed to load parents');
+                showNoParentsFound();
+            }
+        } catch (error) {
+            console.error('Error loading parents:', error);
+            showNoParentsFound();
+        }
+    }
+
+    // Display parents in the search modal
+    function displayParents(parents) {
+        // Hide loading skeleton
+        document.getElementById('parentsLoading').classList.add('hidden');
+
+        parentsList.innerHTML = '';
+        noParentsFound.classList.add('hidden');
+
+        if (parents.length === 0) {
+            showNoParentsFound();
+            return;
+        }
+
+        // Show parents list
+        document.getElementById('parentsList').classList.remove('hidden');
+
+        parents.forEach(parent => {
+            const parentItem = document.createElement('div');
+            parentItem.className = 'flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200';
+            parentItem.innerHTML = `
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
+                        <span class="text-primary-600 font-medium">${parent.first_name.charAt(0)}${parent.last_name.charAt(0)}</span>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-gray-900">${parent.first_name} ${parent.last_name}</h4>
+                        <p class="text-sm text-gray-500">${parent.email || 'No email'} • ${parent.phone || 'No phone'}</p>
+                    </div>
+                </div>
+                <button class="px-3 py-1 bg-primary-600 text-white rounded text-sm hover:bg-primary-700 transition-colors duration-200">
+                    Select
+                </button>
+            `;
+
+            parentItem.addEventListener('click', () => selectParent(parent));
+            parentsList.appendChild(parentItem);
+        });
+    }
+
+    // Show no parents found message
+    function showNoParentsFound() {
+        // Hide loading skeleton and parents list
+        document.getElementById('parentsLoading').classList.add('hidden');
+        document.getElementById('parentsList').classList.add('hidden');
+
+        parentsList.innerHTML = '';
+        noParentsFound.classList.remove('hidden');
+    }
+
+    // Select a parent
+    function selectParent(parent) {
+        // Check if we're in create or edit mode by checking which modal is visible
+        const editModal = document.getElementById('editStudentModal');
+        const isEditMode = editModal && !editModal.classList.contains('hidden');
+
+        if (isEditMode) {
+            // Edit mode
+            document.getElementById('editParentId').value = parent.id;
+            document.getElementById('editSelectedParentDisplay').textContent = `${parent.first_name} ${parent.last_name}`;
+            console.log('Selected parent for edit:', parent.first_name, parent.last_name, 'ID:', parent.id);
+        } else {
+            // Create mode
+            document.getElementById('parentId').value = parent.id;
+            document.getElementById('selectedParentDisplay').textContent = `${parent.first_name} ${parent.last_name}`;
+            console.log('Selected parent for create:', parent.first_name, parent.last_name, 'ID:', parent.id);
+        }
+
+        closeParentSearchModal();
+    }
+
+    function resetSearchResults() {
+        if (parentSearchResults) {
+            parentSearchResults.innerHTML = `
+                <div id="parentSearchLoading" class="hidden p-4 text-center text-gray-500">
+                    <i class="fas fa-spinner fa-spin mr-2"></i>Searching...
+                </div>
+
+                <div id="parentSearchEmpty" class="p-8 text-center text-gray-500">
+                    <i class="fas fa-search text-3xl mb-3 text-gray-300"></i>
+                    <p>Start typing to search for parents...</p>
+                </div>
+
+                <div id="parentSearchNoResults" class="hidden p-8 text-center text-gray-500">
+                    <i class="fas fa-user-slash text-3xl mb-3 text-gray-300"></i>
+                    <p>No parents found matching your search.</p>
+                </div>
+            `;
+        }
+    }
+
+    // Event listeners for parent search modal
+    searchParentBtn.addEventListener('click', openParentSearchModal);
+    closeParentSearchBtn.addEventListener('click', closeParentSearchModal);
+
+    // Search input functionality
+    parentSearchInput.addEventListener('input', function() {
+        const searchTerm = this.value.trim();
+
+        // Show loading skeleton when searching
+        document.getElementById('parentsLoading').classList.remove('hidden');
+        document.getElementById('parentsList').classList.add('hidden');
+        document.getElementById('noParentsFound').classList.add('hidden');
+
+        if (searchTerm.length >= 2) {
+            loadParents(searchTerm);
+        } else if (searchTerm.length === 0) {
+            loadParents();
+        }
+    });
+
+    // Close parent search modal when clicking outside
+    parentSearchModal.addEventListener('click', function(e) {
+        if (e.target === parentSearchModal) {
+            closeParentSearchModal();
+        }
+    });
+
+    // Edit modal parent search functionality
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'editSearchParentBtn') {
+            openParentSearchModal();
+        }
+
+        if (e.target && e.target.id === 'editRemoveParentBtn') {
+            // Remove parent assignment
+            document.getElementById('editParentId').value = '';
+            document.getElementById('editSelectedParentDisplay').textContent = 'No parent assigned';
+            document.getElementById('editParentRelationship').value = '';
+            console.log('Parent removed from student');
+        }
+    });
+
+    // Parent search functionality
+    let searchTimeout;
+
+    if (parentSearchInput) {
+        parentSearchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+
+            // Clear previous timeout
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+
+            // Set new timeout for search
+            searchTimeout = setTimeout(() => {
+                if (query.length === 0) {
+                    resetSearchResults();
+                } else if (query.length >= 2) {
+                    searchParents(query);
+                }
+            }, 300); // 300ms debounce
+        });
+    }
+
+    async function searchParents(query) {
+        if (!parentSearchResults) return;
+
+        const loadingDiv = document.getElementById('parentSearchLoading');
+        const emptyDiv = document.getElementById('parentSearchEmpty');
+        const noResultsDiv = document.getElementById('parentSearchNoResults');
+
+        // Show loading state
+        parentSearchResults.innerHTML = '';
+        if (loadingDiv) {
+            loadingDiv.classList.remove('hidden');
+            parentSearchResults.appendChild(loadingDiv);
+        }
+
+        try {
+            const response = await fetch(`/api/parents/search?q=${encodeURIComponent(query)}`);
+            const data = await response.json();
+
+            parentSearchResults.innerHTML = '';
+
+            if (data.parents && data.parents.length > 0) {
+                data.parents.forEach(parent => {
+                    const parentDiv = document.createElement('div');
+                    parentDiv.className = 'p-4 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0';
+                    parentDiv.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h4 class="font-medium text-gray-900">${parent.first_name} ${parent.last_name}</h4>
+                                <div class="text-sm text-gray-500 mt-1">
+                                    <div class="flex items-center space-x-4">
+                                        <span><i class="fas fa-phone mr-1"></i>${parent.phone || 'No phone'}</span>
+                                        ${parent.email ? `<span><i class="fas fa-envelope mr-1"></i>${parent.email}</span>` : ''}
+                                    </div>
+                                    ${parent.address ? `<div class="mt-1"><i class="fas fa-map-marker-alt mr-1"></i>${parent.address}</div>` : ''}
+                                </div>
+                            </div>
+                            <button class="select-parent-btn px-3 py-1 bg-primary-600 text-white text-sm rounded hover:bg-primary-700 transition-colors duration-200"
+                                    data-parent-id="${parent.id}" data-parent-name="${parent.first_name} ${parent.last_name}">
+                                Select
+                            </button>
+                        </div>
+                    `;
+                    parentSearchResults.appendChild(parentDiv);
+                });
+
+                // Add event listeners to select buttons
+                document.querySelectorAll('.select-parent-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const parentId = this.dataset.parentId;
+                        const parentName = this.dataset.parentName;
+
+                        // Set the selected parent
+                        setSelectedParent(parentId, parentName);
+                        closeSearchParentModal();
+                    });
+                });
+            } else {
+                if (noResultsDiv) {
+                    noResultsDiv.classList.remove('hidden');
+                    parentSearchResults.appendChild(noResultsDiv);
+                }
+            }
+        } catch (error) {
+            console.error('Error searching parents:', error);
+            parentSearchResults.innerHTML = `
+                <div class="p-8 text-center text-red-500">
+                    <i class="fas fa-exclamation-triangle text-3xl mb-3"></i>
+                    <p>Error searching parents. Please try again.</p>
+                </div>
+            `;
+        }
+    }
+
+    // Parent form submission
+    addParentForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const submitBtn = this.querySelector('button[type="submit"]');
+        setButtonLoading(submitBtn, true, '<i class="fas fa-plus mr-2"></i>Add Parent');
+
+        const formData = new FormData(this);
+        const data = {
+            first_name: formData.get('firstName'),
+            last_name: formData.get('lastName'),
+            phone: formData.get('phone'),
+            email: formData.get('email'),
+            address: formData.get('address')
+        };
+
+        try {
+            const response = await fetch('/api/parents', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Parent added successfully!');
+                closeParentModal();
+                // Set the newly created parent as selected
+                setSelectedParent(result.parent.id, `${result.parent.first_name} ${result.parent.last_name}`);
+            } else {
+                alert('Error: ' + result.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while adding the parent');
+        } finally {
+            setButtonLoading(submitBtn, false, '<i class="fas fa-plus mr-2"></i>Add Parent');
+        }
+    });
+
+    // Form submission
+    addStudentForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const submitBtn = this.querySelector('button[type="submit"]');
+        setButtonLoading(submitBtn, true, '<i class="fas fa-plus mr-2"></i>Add Student');
+
+        const formData = new FormData(this);
+        const data = {
+            // student_id is auto-generated on the server, no need to send it
+            first_name: formData.get('firstName'),
+            last_name: formData.get('lastName'),
+            date_of_birth: formData.get('dateOfBirth'),
+            gender: formData.get('gender'),
+            address: formData.get('address'),
+            class_id: formData.get('classId'),
+            parent_id: formData.get('parentId'),
+            parent_relationship: formData.get('parentRelationship')
+        };
+
+        try {
+            const response = await fetch('/api/students', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Student added successfully!');
+                closeModal();
+                loadStudents(); // Reload the students table
+            } else {
+                alert('Error: ' + result.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while adding the student');
+        } finally {
+            setButtonLoading(submitBtn, false, '<i class="fas fa-plus mr-2"></i>Add Student');
+        }
+    });
+
+    // Load classes from API
+    async function loadClasses() {
+        try {
+            const response = await fetch('/api/classes');
+            const data = await response.json();
+
+            const classSelect = document.getElementById('classId');
+            classSelect.innerHTML = '<option value="">Select Class</option>';
+
+            data.classes.forEach(classItem => {
+                const option = document.createElement('option');
+                option.value = classItem.id;
+                option.textContent = classItem.name;
+                classSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading classes:', error);
+        }
+    }
+
+    // Function to set selected parent
+    function setSelectedParent(parentId, parentName) {
+        const parentIdInput = document.getElementById('parentId');
+        const selectedParentDisplay = document.getElementById('selectedParentDisplay');
+
+        if (parentIdInput && selectedParentDisplay) {
+            parentIdInput.value = parentId;
+            selectedParentDisplay.textContent = parentName;
+            selectedParentDisplay.classList.remove('text-gray-500');
+            selectedParentDisplay.classList.add('text-gray-900');
+        }
+    }
+
+    // Function to clear selected parent
+    function clearSelectedParent() {
+        const parentIdInput = document.getElementById('parentId');
+        const selectedParentDisplay = document.getElementById('selectedParentDisplay');
+
+        if (parentIdInput && selectedParentDisplay) {
+            parentIdInput.value = '';
+            selectedParentDisplay.textContent = 'No parent selected';
+            selectedParentDisplay.classList.remove('text-gray-900');
+            selectedParentDisplay.classList.add('text-gray-500');
+        }
+    }
+
     // Search functionality
     const searchInput = document.querySelector('input[placeholder="Search students..."]');
     if (searchInput) {
@@ -303,25 +1051,792 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Select all checkbox functionality
-    const selectAllCheckbox = document.querySelector('thead input[type="checkbox"]');
-    const rowCheckboxes = document.querySelectorAll('tbody input[type="checkbox"]');
-    
-    if (selectAllCheckbox) {
-        selectAllCheckbox.addEventListener('change', function() {
-            rowCheckboxes.forEach(checkbox => {
-                checkbox.checked = this.checked;
-            });
-        });
+    // Load students from API
+    async function loadStudents() {
+        const tableBody = document.getElementById('studentsTableBody');
+        const loadingRow = document.getElementById('loadingRow');
+        const emptyRow = document.getElementById('emptyRow');
+        const errorRow = document.getElementById('errorRow');
+
+        // Show loading state
+        loadingRow.classList.remove('hidden');
+        emptyRow.classList.add('hidden');
+        errorRow.classList.add('hidden');
+
+        try {
+            const response = await fetch('/api/students/table');
+            if (!response.ok) {
+                throw new Error('Failed to fetch students');
+            }
+
+            const data = await response.json();
+
+            // Hide loading state
+            loadingRow.classList.add('hidden');
+
+            if (data.students && data.students.length > 0) {
+                renderStudents(data.students);
+                updatePagination(data.count);
+            } else {
+                emptyRow.classList.remove('hidden');
+            }
+        } catch (error) {
+            console.error('Error loading students:', error);
+            loadingRow.classList.add('hidden');
+            errorRow.classList.remove('hidden');
+        }
     }
 
-    // Individual checkbox functionality
-    rowCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            const checkedBoxes = document.querySelectorAll('tbody input[type="checkbox"]:checked');
-            selectAllCheckbox.checked = checkedBoxes.length === rowCheckboxes.length;
-            selectAllCheckbox.indeterminate = checkedBoxes.length > 0 && checkedBoxes.length < rowCheckboxes.length;
+    // Render students in the table
+    function renderStudents(students) {
+        const tableBody = document.getElementById('studentsTableBody');
+
+        // Clear existing content except state rows
+        const existingRows = tableBody.querySelectorAll('tr:not(#loadingRow):not(#emptyRow):not(#errorRow)');
+        existingRows.forEach(row => row.remove());
+
+        students.forEach(student => {
+            const row = createStudentRow(student);
+            tableBody.appendChild(row);
+        });
+
+        // Update checkbox functionality for new rows
+        updateCheckboxFunctionality();
+    }
+
+    // Create a student table row
+    function createStudentRow(student) {
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-gray-50 transition-colors duration-200';
+
+        // Generate avatar color based on initials
+        const colors = [
+            'from-blue-500 to-blue-600',
+            'from-green-500 to-green-600',
+            'from-purple-500 to-purple-600',
+            'from-red-500 to-red-600',
+            'from-yellow-500 to-yellow-600',
+            'from-indigo-500 to-indigo-600',
+            'from-pink-500 to-pink-600',
+            'from-teal-500 to-teal-600'
+        ];
+        const colorIndex = student.initials.charCodeAt(0) % colors.length;
+        const avatarColor = colors[colorIndex];
+
+        // Status badge styling
+        const statusClass = student.status === 'Active'
+            ? 'bg-green-100 text-green-800'
+            : 'bg-yellow-100 text-yellow-800';
+
+        row.innerHTML = `
+            <td class="px-4 py-3">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-gradient-to-br ${avatarColor} rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-medium">${student.initials}</span>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-900">${student.full_name}</p>
+                        <p class="text-xs text-gray-500">${student.class_name ? `Class: ${student.class_name}` : 'No class assigned'}</p>
+                    </div>
+                </div>
+            </td>
+            <td class="px-4 py-3 text-sm text-gray-900">${student.student_id}</td>
+            <td class="px-4 py-3 text-sm text-gray-900">${student.class_name || 'Not assigned'}</td>
+            <td class="px-4 py-3">
+                <p class="text-sm text-gray-900">${student.parent_name || 'No parent assigned'}</p>
+                <p class="text-xs text-gray-500">${student.parent_phone || ''}</p>
+            </td>
+            <td class="px-4 py-3">
+                <span class="inline-flex px-2 py-1 text-xs font-medium ${statusClass} rounded-full">${student.status}</span>
+            </td>
+            <td class="px-4 py-3">
+                <div class="flex items-center space-x-2">
+                    <button class="p-1 text-gray-400 hover:text-blue-600 transition-colors duration-200" title="View" onclick="viewStudent('${student.id}')">
+                        <i class="fas fa-eye text-sm"></i>
+                    </button>
+                    <button class="p-1 text-gray-400 hover:text-green-600 transition-colors duration-200" title="Edit" onclick="editStudent('${student.id}')">
+                        <i class="fas fa-edit text-sm"></i>
+                    </button>
+                    <button class="p-1 text-gray-400 hover:text-red-600 transition-colors duration-200" title="Delete" onclick="deleteStudent('${student.id}')">
+                        <i class="fas fa-trash text-sm"></i>
+                    </button>
+                </div>
+            </td>
+        `;
+
+        return row;
+    }
+
+    // Update pagination info
+    function updatePagination(totalCount) {
+        const paginationText = document.querySelector('.text-sm.text-gray-700');
+        if (paginationText) {
+            paginationText.innerHTML = `
+                Showing <span class="font-medium">1</span> to <span class="font-medium">${totalCount}</span> of <span class="font-medium">${totalCount}</span> results
+            `;
+        }
+    }
+
+    // Update functionality for dynamically added rows
+    function updateCheckboxFunctionality() {
+        // Checkbox functionality removed - no longer needed
+    }
+
+    // Modal elements
+    const viewStudentModal = document.getElementById('viewStudentModal');
+    const editStudentModal = document.getElementById('editStudentModal');
+    const deleteStudentModal = document.getElementById('deleteStudentModal');
+
+    // Load classes for edit modal
+    async function loadClassesForEdit() {
+        try {
+            const response = await fetch('/api/classes');
+            if (response.ok) {
+                const data = await response.json();
+                const classSelect = document.getElementById('editClassID');
+
+                // Clear existing options except the first one
+                classSelect.innerHTML = '<option value="">Select Class</option>';
+
+                // Add classes to dropdown
+                data.classes.forEach(cls => {
+                    const option = document.createElement('option');
+                    option.value = cls.id;
+                    option.textContent = cls.name;
+                    classSelect.appendChild(option);
+                });
+            }
+        } catch (error) {
+            console.error('Error loading classes for edit:', error);
+        }
+    }
+
+    // Load parent information for edit modal
+    async function loadParentInfoForEdit(studentId) {
+        try {
+            // Get student details with parent information from the detailed API
+            const response = await fetch(`/api/students/${studentId}`);
+            if (response.ok) {
+                const data = await response.json();
+
+                if (data.parent) {
+                    // Populate parent fields with existing parent data
+                    document.getElementById('editParentId').value = data.parent.id || '';
+                    document.getElementById('editSelectedParentDisplay').textContent = `${data.parent.first_name} ${data.parent.last_name}`;
+                    document.getElementById('editParentRelationship').value = data.parent.relationship || 'guardian';
+                } else {
+                    // Clear parent fields if no parent exists
+                    document.getElementById('editParentId').value = '';
+                    document.getElementById('editSelectedParentDisplay').textContent = 'No parent assigned';
+                    document.getElementById('editParentRelationship').value = '';
+                }
+            }
+        } catch (error) {
+            console.error('Error loading parent info for edit:', error);
+            // Clear fields on error
+            document.getElementById('editParentId').value = '';
+            document.getElementById('editSelectedParentDisplay').textContent = 'No parent assigned';
+            document.getElementById('editParentRelationship').value = '';
+        }
+    }
+
+    // View Student Modal Functions
+    window.viewStudent = async function(studentId) {
+        try {
+            viewStudentModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            // Show loading skeleton, hide content
+            document.getElementById('viewStudentLoading').classList.remove('hidden');
+            document.getElementById('viewStudentContent').classList.add('hidden');
+
+            const response = await fetch(`/api/students/${studentId}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch student details');
+            }
+
+            const data = await response.json();
+            const student = data.student;
+
+            // Hide loading skeleton, show content
+            document.getElementById('viewStudentLoading').classList.add('hidden');
+            document.getElementById('viewStudentContent').classList.remove('hidden');
+
+            document.getElementById('viewStudentContent').innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="md:col-span-2 flex items-center">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white text-xl font-medium">${student.first_name[0]}${student.last_name[0]}</span>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-semibold text-gray-900">${student.first_name} ${student.last_name}</h4>
+                            <p class="text-gray-600">${student.student_id}</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                        <p class="text-gray-900">${student.first_name}</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                        <p class="text-gray-900">${student.last_name}</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                        <p class="text-gray-900">${student.date_of_birth || 'Not specified'}</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                        <p class="text-gray-900">${student.gender || 'Not specified'}</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Class</label>
+                        <p class="text-gray-900">${student.class_name || 'Not assigned'}</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <span class="inline-flex px-2 py-1 text-xs font-medium ${student.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} rounded-full">
+                            ${student.is_active ? 'Active' : 'Inactive'}
+                        </span>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                        <p class="text-gray-900">${student.address || 'Not specified'}</p>
+                    </div>
+                </div>
+
+                ${data.parent ? `
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <h5 class="text-lg font-medium text-gray-900 mb-4">Parent/Guardian Information</h5>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Parent Name</label>
+                            <p class="text-gray-900">${data.parent.first_name} ${data.parent.last_name}</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <p class="text-gray-900">${data.parent.email || 'Not specified'}</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                            <p class="text-gray-900">${data.parent.phone || 'Not specified'}</p>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                            <p class="text-gray-900">${data.parent.address || 'Not specified'}</p>
+                        </div>
+                    </div>
+                </div>
+                ` : `
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <h5 class="text-lg font-medium text-gray-900 mb-4">Parent/Guardian Information</h5>
+                    <p class="text-gray-500 text-center py-4">No parent information available</p>
+                </div>
+                `}
+            `;
+        } catch (error) {
+            console.error('Error loading student details:', error);
+
+            // Hide loading skeleton, show content with error
+            document.getElementById('viewStudentLoading').classList.add('hidden');
+            document.getElementById('viewStudentContent').classList.remove('hidden');
+
+            document.getElementById('viewStudentContent').innerHTML = `
+                <div class="text-center py-8">
+                    <div class="text-red-500">
+                        <i class="fas fa-exclamation-triangle text-4xl mb-2"></i>
+                        <p class="text-lg font-medium">Error loading student details</p>
+                        <p class="text-sm">Please try again later.</p>
+                    </div>
+                </div>
+            `;
+        }
+    };
+
+    // Edit Student Modal Functions
+    window.editStudent = async function(studentId) {
+        try {
+            editStudentModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            // Show loading skeleton, hide form
+            document.getElementById('editStudentLoading').classList.remove('hidden');
+            document.getElementById('editStudentForm').classList.add('hidden');
+
+            // Load student data
+            const response = await fetch(`/api/students/${studentId}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch student details');
+            }
+
+            const data = await response.json();
+            const student = data.student;
+
+            // Load classes for the dropdown
+            await loadClassesForEdit();
+
+            // Populate student form
+            document.getElementById('editStudentID').value = student.student_id;
+            document.getElementById('editFirstName').value = student.first_name;
+            document.getElementById('editLastName').value = student.last_name;
+            document.getElementById('editDateOfBirth').value = student.date_of_birth || '';
+            document.getElementById('editGender').value = student.gender || '';
+            document.getElementById('editClassID').value = student.class_id || '';
+            document.getElementById('editAddress').value = student.address || '';
+
+            // Load and populate parent information
+            await loadParentInfoForEdit(studentId);
+
+            // Store student ID for form submission
+            document.getElementById('editStudentForm').dataset.studentId = studentId;
+
+            // Hide loading skeleton, show form
+            document.getElementById('editStudentLoading').classList.add('hidden');
+            document.getElementById('editStudentForm').classList.remove('hidden');
+
+        } catch (error) {
+            console.error('Error loading student for edit:', error);
+            alert('Error loading student details. Please try again.');
+            editStudentModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+    };
+
+    // Delete Student Modal Functions
+    window.deleteStudent = function(studentId) {
+        // Find student name from the table
+        const studentRow = document.querySelector(`button[onclick="deleteStudent('${studentId}')"]`).closest('tr');
+        const studentName = studentRow.querySelector('.text-sm.font-medium.text-gray-900').textContent;
+
+        document.getElementById('deleteStudentName').textContent = studentName;
+        document.getElementById('confirmDeleteStudent').dataset.studentId = studentId;
+
+        deleteStudentModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    };
+
+    // Modal Event Listeners
+
+    // View Student Modal
+    document.getElementById('closeViewStudentModal').addEventListener('click', function() {
+        viewStudentModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    });
+
+    // Edit Student Modal
+    document.getElementById('closeEditStudentModal').addEventListener('click', function() {
+        editStudentModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    });
+
+    document.getElementById('cancelEditStudent').addEventListener('click', function() {
+        editStudentModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    });
+
+    // Edit Student Form Submission
+    document.getElementById('editStudentForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const studentId = this.dataset.studentId;
+        const submitBtn = this.querySelector('button[type="submit"]');
+
+        // Show loading state
+        setButtonLoading(submitBtn, true, '<i class="fas fa-save mr-2"></i>Update Student');
+
+        const formData = {
+            first_name: document.getElementById('editFirstName').value,
+            last_name: document.getElementById('editLastName').value,
+            date_of_birth: document.getElementById('editDateOfBirth').value,
+            gender: document.getElementById('editGender').value,
+            class_id: document.getElementById('editClassID').value,
+            address: document.getElementById('editAddress').value,
+            parent_id: document.getElementById('editParentId').value,
+            parent_relationship: document.getElementById('editParentRelationship').value
+        };
+
+        console.log('Submitting edit form with data:', formData);
+
+        try {
+            const response = await fetch(`/api/students/${studentId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Student and parent information updated successfully!');
+                editStudentModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                loadStudents(); // Reload the students table
+            } else {
+                console.error('Update error:', result.error);
+                alert('Error: ' + result.error);
+            }
+        } catch (error) {
+            console.error('Error updating student:', error);
+            alert('Error updating student. Please try again.');
+        } finally {
+            // Reset loading state
+            setButtonLoading(submitBtn, false, '<i class="fas fa-save mr-2"></i>Update Student');
+        }
+    });
+
+    // Delete Student Modal
+    document.getElementById('cancelDeleteStudent').addEventListener('click', function() {
+        deleteStudentModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    });
+
+    document.getElementById('confirmDeleteStudent').addEventListener('click', async function() {
+        const studentId = this.dataset.studentId;
+
+        try {
+            const response = await fetch(`/api/students/${studentId}`, {
+                method: 'DELETE'
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Student deleted successfully!');
+                deleteStudentModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                loadStudents(); // Reload the students table
+            } else {
+                alert('Error: ' + result.error);
+            }
+        } catch (error) {
+            console.error('Error deleting student:', error);
+            alert('Error deleting student. Please try again.');
+        }
+    });
+
+    // Close modals when clicking outside
+    [viewStudentModal, editStudentModal, deleteStudentModal].forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
         });
     });
+
+    // Make loadStudents available globally for retry button
+    window.loadStudents = loadStudents;
 });
 </script>
+
+<!-- View Student Modal -->
+<div id="viewStudentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Student Details</h3>
+                <button id="closeViewStudentModal" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <!-- Loading Skeleton for View Modal -->
+            <div id="viewStudentLoading" class="p-6">
+                <div class="animate-pulse space-y-6">
+                    <!-- Avatar and Basic Info -->
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 bg-gray-200 rounded-full"></div>
+                        <div class="flex-1">
+                            <div class="h-6 bg-gray-200 rounded w-48 mb-2"></div>
+                            <div class="h-4 bg-gray-200 rounded w-32"></div>
+                        </div>
+                    </div>
+
+                    <!-- Student Information Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="h-4 bg-gray-200 rounded w-20 mb-1"></div>
+                            <div class="h-5 bg-gray-200 rounded w-32"></div>
+                        </div>
+                        <div>
+                            <div class="h-4 bg-gray-200 rounded w-24 mb-1"></div>
+                            <div class="h-5 bg-gray-200 rounded w-28"></div>
+                        </div>
+                        <div>
+                            <div class="h-4 bg-gray-200 rounded w-16 mb-1"></div>
+                            <div class="h-5 bg-gray-200 rounded w-20"></div>
+                        </div>
+                        <div>
+                            <div class="h-4 bg-gray-200 rounded w-12 mb-1"></div>
+                            <div class="h-5 bg-gray-200 rounded w-24"></div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <div class="h-4 bg-gray-200 rounded w-16 mb-1"></div>
+                            <div class="h-12 bg-gray-200 rounded"></div>
+                        </div>
+                    </div>
+
+                    <!-- Parent Information Section -->
+                    <div class="pt-6 border-t border-gray-200">
+                        <div class="h-5 bg-gray-200 rounded w-40 mb-4"></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <div class="h-4 bg-gray-200 rounded w-24 mb-1"></div>
+                                <div class="h-5 bg-gray-200 rounded w-36"></div>
+                            </div>
+                            <div>
+                                <div class="h-4 bg-gray-200 rounded w-12 mb-1"></div>
+                                <div class="h-5 bg-gray-200 rounded w-32"></div>
+                            </div>
+                            <div>
+                                <div class="h-4 bg-gray-200 rounded w-16 mb-1"></div>
+                                <div class="h-5 bg-gray-200 rounded w-28"></div>
+                            </div>
+                            <div class="md:col-span-2">
+                                <div class="h-4 bg-gray-200 rounded w-16 mb-1"></div>
+                                <div class="h-8 bg-gray-200 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="viewStudentContent" class="p-6 hidden">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Student Modal -->
+<div id="editStudentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Edit Student</h3>
+                <button id="closeEditStudentModal" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Loading Skeleton -->
+            <div id="editStudentLoading" class="p-6">
+                <div class="animate-pulse space-y-6">
+                    <!-- Student Information Section -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Student ID -->
+                        <div class="md:col-span-2">
+                            <div class="h-4 bg-gray-200 rounded w-20 mb-2"></div>
+                            <div class="h-10 bg-gray-200 rounded"></div>
+                        </div>
+
+                        <!-- First Name -->
+                        <div>
+                            <div class="h-4 bg-gray-200 rounded w-20 mb-2"></div>
+                            <div class="h-10 bg-gray-200 rounded"></div>
+                        </div>
+
+                        <!-- Last Name -->
+                        <div>
+                            <div class="h-4 bg-gray-200 rounded w-20 mb-2"></div>
+                            <div class="h-10 bg-gray-200 rounded"></div>
+                        </div>
+
+                        <!-- Date of Birth -->
+                        <div>
+                            <div class="h-4 bg-gray-200 rounded w-24 mb-2"></div>
+                            <div class="h-10 bg-gray-200 rounded"></div>
+                        </div>
+
+                        <!-- Gender -->
+                        <div>
+                            <div class="h-4 bg-gray-200 rounded w-16 mb-2"></div>
+                            <div class="h-10 bg-gray-200 rounded"></div>
+                        </div>
+
+                        <!-- Class -->
+                        <div>
+                            <div class="h-4 bg-gray-200 rounded w-12 mb-2"></div>
+                            <div class="h-10 bg-gray-200 rounded"></div>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="md:col-span-2">
+                            <div class="h-4 bg-gray-200 rounded w-16 mb-2"></div>
+                            <div class="h-20 bg-gray-200 rounded"></div>
+                        </div>
+                    </div>
+
+                    <!-- Parent Section -->
+                    <div class="pt-6 border-t border-gray-200">
+                        <div class="h-5 bg-gray-200 rounded w-40 mb-4"></div>
+                        <div class="space-y-4">
+                            <!-- Current Parent -->
+                            <div>
+                                <div class="h-4 bg-gray-200 rounded w-32 mb-2"></div>
+                                <div class="flex space-x-2">
+                                    <div class="flex-1 h-10 bg-gray-200 rounded"></div>
+                                    <div class="w-20 h-10 bg-gray-200 rounded"></div>
+                                    <div class="w-20 h-10 bg-gray-200 rounded"></div>
+                                </div>
+                            </div>
+
+                            <!-- Relationship -->
+                            <div>
+                                <div class="h-4 bg-gray-200 rounded w-24 mb-2"></div>
+                                <div class="h-10 bg-gray-200 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                        <div class="w-20 h-10 bg-gray-200 rounded"></div>
+                        <div class="w-32 h-10 bg-gray-200 rounded"></div>
+                    </div>
+                </div>
+            </div>
+
+            <form id="editStudentForm" class="p-6 hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Student ID (Read-only) -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Student ID</label>
+                        <input type="text" id="editStudentID" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500" readonly>
+                    </div>
+
+                    <!-- First Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                        <input type="text" id="editFirstName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" required>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                        <input type="text" id="editLastName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" required>
+                    </div>
+
+                    <!-- Date of Birth -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+                        <input type="date" id="editDateOfBirth" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                    </div>
+
+                    <!-- Gender -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+                        <select id="editGender" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Class -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Class</label>
+                        <select id="editClassID" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                            <option value="">Select Class</option>
+                            <!-- Classes will be loaded dynamically -->
+                        </select>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                        <textarea id="editAddress" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter student's address"></textarea>
+                    </div>
+                </div>
+
+                <!-- Parent/Guardian Information -->
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <h4 class="text-lg font-medium text-gray-900 mb-4">Parent/Guardian Information</h4>
+                    <div class="grid grid-cols-1 gap-6">
+                        <!-- Current Parent Display -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Current Parent/Guardian</label>
+                            <div class="flex space-x-2">
+                                <!-- Hidden input to store selected parent ID -->
+                                <input type="hidden" id="editParentId">
+
+                                <!-- Selected parent display -->
+                                <div id="editSelectedParentDisplay" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 text-sm">
+                                    No parent assigned
+                                </div>
+
+                                <button type="button" id="editSearchParentBtn" class="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm whitespace-nowrap">
+                                    <i class="fas fa-search mr-1"></i>Change
+                                </button>
+                                <button type="button" id="editRemoveParentBtn" class="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 text-sm whitespace-nowrap">
+                                    <i class="fas fa-times mr-1"></i>Remove
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Relationship -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Relationship</label>
+                            <select id="editParentRelationship" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                <option value="">Select Relationship</option>
+                                <option value="father">Father</option>
+                                <option value="mother">Mother</option>
+                                <option value="guardian">Guardian</option>
+                                <option value="brother">Brother</option>
+                                <option value="sister">Sister</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-200">
+                    <button type="button" id="cancelEditStudent" class="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200">
+                        Update Student
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteStudentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full">
+            <div class="p-6">
+                <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 text-center mb-2">Delete Student</h3>
+                <p class="text-gray-600 text-center mb-6">
+                    Are you sure you want to delete <span id="deleteStudentName" class="font-medium"></span>?
+                    This action cannot be undone.
+                </p>
+                <div class="flex justify-center space-x-3">
+                    <button id="cancelDeleteStudent" class="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200">
+                        Cancel
+                    </button>
+                    <button id="confirmDeleteStudent" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200">
+                        Delete Student
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

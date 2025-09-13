@@ -22,6 +22,9 @@ func SetupTeachersRoutes(app *fiber.App) {
 	api.Get("/", GetTeachersAPI)
 	api.Get("/search", SearchTeachersAPI)
 	api.Post("/", CreateTeacherAPI)
+	api.Get("/:id", GetTeacherAPI)
+	api.Put("/:id", UpdateTeacherAPI)
+	api.Delete("/:id", DeleteTeacherAPI)
 
 	// Additional API routes for departments and subjects
 	departmentsAPI := app.Group("/api/departments")

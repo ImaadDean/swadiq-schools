@@ -42,12 +42,13 @@
     <script>
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const loginBtn = document.getElementById('loginBtn');
             const errorMessage = document.getElementById('errorMessage');
-            
+
             loginBtn.disabled = true;
-            loginBtn.textContent = 'Signing in...';
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Signing in...';
+            loginBtn.classList.add('opacity-75', 'cursor-not-allowed');
             errorMessage.classList.add('hidden');
 
             const formData = {
@@ -77,7 +78,8 @@
                 errorMessage.classList.remove('hidden');
             } finally {
                 loginBtn.disabled = false;
-                loginBtn.textContent = 'Sign In';
+                loginBtn.innerHTML = 'Sign In';
+                loginBtn.classList.remove('opacity-75', 'cursor-not-allowed');
             }
         });
     </script>

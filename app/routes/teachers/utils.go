@@ -62,6 +62,28 @@ func GetTeacherRoles() []string {
 	return []string{"teacher", "class_teacher"}
 }
 
+// GetTeacherByID retrieves a single teacher by ID
+func GetTeacherByID(db *sql.DB, teacherID string) (*models.User, error) {
+	query := `SELECT u.id, u.email, u.first_name, u.last_name, u.phone, u.is_active, u.created_at, u.updated_at
+			  FROM users u
+			  INNER JOIN user_roles ur ON u.id = ur.user_id
+			  INNER JOIN roles r ON ur.role_id = r.id
+			  WHERE u.id = $1 AND r.name IN ('class_teacher', 'subject_teacher')
+			  AND u.is_active = true`
+
+	teacher := &models.User{}
+	err := db.QueryRow(query, teacherID).Scan(
+		&teacher.ID, &teacher.Email, &teacher.FirstName, &teacher.LastName,
+		&teacher.Phone, &teacher.IsActive, &teacher.CreatedAt, &teacher.UpdatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return teacher, nil
+}
+
 // SearchTeachers searches for teachers by name or email
 func SearchTeachers(db *sql.DB, query string, limit int) ([]*models.User, error) {
 	if query == "" {

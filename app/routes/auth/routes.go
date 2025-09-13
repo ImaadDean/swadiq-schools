@@ -36,13 +36,13 @@ func ShowLoginPage(c *fiber.Ctx) error {
 
 	return c.Render("auth/login", fiber.Map{
 		"Title": "Login - Swadiq Schools",
-	})
+	}, "")
 }
 
 func ShowForgotPasswordPage(c *fiber.Ctx) error {
 	return c.Render("auth/forgot-password", fiber.Map{
 		"Title": "Forgot Password - Swadiq Schools",
-	})
+	}, "")
 }
 
 func ShowProfilePage(c *fiber.Ctx) error {
@@ -53,7 +53,7 @@ func ShowProfilePage(c *fiber.Ctx) error {
 		"LastName":  c.Locals("user_last_name"),
 		"Email":     c.Locals("user_email"),
 		"Roles":     c.Locals("user_roles"),
-	})
+	}, "")
 }
 
 // AuthMiddleware validates session and sets user context
@@ -159,4 +159,3 @@ func RoleMiddleware(allowedRoles ...string) fiber.Handler {
 		})
 	}
 }
-

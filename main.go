@@ -78,15 +78,15 @@ func main() {
 
 	// Initialize template engine
 	engine := html.New("./app/templates", ".html")
-	engine.Reload(true) // Enable template reloading in development
-	engine.Debug(true)  // Enable debug mode
+	engine.Reload(false) // Disable template reloading
+	engine.Debug(false)  // Disable debug mode
 
 	// Create Fiber app
 	app := fiber.New(fiber.Config{
-		Views:            engine,
-		ViewsLayout:      "layouts/main",
+		Views:             engine,
+		ViewsLayout:       "layouts/main",
 		PassLocalsToViews: true,
-		ErrorHandler:     customErrorHandler,
+		ErrorHandler:      customErrorHandler,
 	})
 
 	// Middleware
@@ -130,6 +130,7 @@ func main() {
 	api.Use(auth.AuthMiddleware)
 	api.Get("/", parents.GetParentsAPI)
 	api.Post("/", parents.CreateParentAPI)
+	api.Get("/search", parents.SearchParentsAPI)
 
 	// Setup classes API routes
 	classesAPI := app.Group("/api/classes")

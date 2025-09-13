@@ -264,7 +264,10 @@
     // Form submission
     addSubjectForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-        
+
+        const submitBtn = this.querySelector('button[type="submit"]');
+        setButtonLoading(submitBtn, true, '<i class="fas fa-plus mr-2"></i>Add Subject');
+
         const formData = new FormData(addSubjectForm);
         const data = {
             name: formData.get('subjectName'),
@@ -291,6 +294,8 @@
         } catch (error) {
             console.error('Error creating subject:', error);
             alert('Error: Failed to create subject');
+        } finally {
+            setButtonLoading(submitBtn, false, '<i class="fas fa-plus mr-2"></i>Add Subject');
         }
     });
 

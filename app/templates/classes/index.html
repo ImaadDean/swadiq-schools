@@ -592,7 +592,10 @@
     // Form submission
     addClassForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-        
+
+        const submitBtn = this.querySelector('button[type="submit"]');
+        setButtonLoading(submitBtn, true, '<i class="fas fa-plus mr-2"></i>Add Class');
+
         const formData = new FormData(addClassForm);
         const data = {
             name: formData.get('className'),
@@ -618,6 +621,8 @@
         } catch (error) {
             console.error('Error creating class:', error);
             alert('Error: Failed to create class');
+        } finally {
+            setButtonLoading(submitBtn, false, '<i class="fas fa-plus mr-2"></i>Add Class');
         }
     });
 

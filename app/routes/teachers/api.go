@@ -92,6 +92,89 @@ func SearchTeachersAPI(c *fiber.Ctx) error {
 	})
 }
 
+func GetTeacherAPI(c *fiber.Ctx) error {
+	teacherID := c.Params("id")
+	if teacherID == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "Teacher ID is required"})
+	}
+
+	teacher, err := GetTeacherByID(config.GetDB(), teacherID)
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{"error": "Teacher not found"})
+	}
+
+	return c.JSON(fiber.Map{
+		"teacher": teacher,
+	})
+}
+
+func UpdateTeacherAPI(c *fiber.Ctx) error {
+	teacherID := c.Params("id")
+	if teacherID == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "Teacher ID is required"})
+	}
+
+	type UpdateTeacherRequest struct {
+		FirstName string `json:"first_name"`
+		LastName  string `json:"last_name"`
+		Email     string `json:"email"`
+		Phone     string `json:"phone"`
+	}
+
+	var req UpdateTeacherRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "Invalid request"})
+	}
+
+	if req.FirstName == "" || req.LastName == "" || req.Email == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "First name, last name, and email are required"})
+	}
+
+	// Check if teacher exists
+	existingTeacher, err := GetTeacherByID(config.GetDB(), teacherID)
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{"error": "Teacher not found"})
+	}
+
+	// Update teacher data
+	existingTeacher.FirstName = req.FirstName
+	existingTeacher.LastName = req.LastName
+	existingTeacher.Email = req.Email
+	existingTeacher.Phone = req.Phone
+
+	if err := database.UpdateTeacher(config.GetDB(), existingTeacher); err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to update teacher"})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "Teacher updated successfully",
+		"teacher": existingTeacher,
+	})
+}
+
+func DeleteTeacherAPI(c *fiber.Ctx) error {
+	teacherID := c.Params("id")
+	if teacherID == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "Teacher ID is required"})
+	}
+
+	// Check if teacher exists
+	_, err := GetTeacherByID(config.GetDB(), teacherID)
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{"error": "Teacher not found"})
+	}
+
+	// TODO: Check if teacher has assigned classes before deleting
+	// For now, we'll do a soft delete
+	if err := database.DeleteTeacher(config.GetDB(), teacherID); err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to delete teacher"})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "Teacher deleted successfully",
+	})
+}
+
 func GetSubjectsAPI(c *fiber.Ctx) error {
 	departmentID := c.Query("department_id")
 

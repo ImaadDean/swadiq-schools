@@ -14,13 +14,21 @@ func SetupStudentsRoutes(app *fiber.App) {
 
 	// Routes
 	students.Get("/", StudentsPage)
-	students.Get("/add", AddStudentPage)
 
 	// API routes
 	api := app.Group("/api/students")
 	api.Use(auth.AuthMiddleware)
-	api.Get("/", GetStudentsAPI)
-	api.Post("/", CreateStudentAPI)
+	api.Get("/", GetStudentsAPI)             // Get all students
+	api.Get("/table", GetStudentsTableAPI)   // Get students formatted for table
+	api.Get("/year", GetStudentsByYearAPI)   // Get students by year (?year=2025)
+	api.Get("/class", GetStudentsByClassAPI) // Get students by class (?class_id=uuid)
+	api.Get("/:id", GetStudentByIDAPI)       // Get single student by ID
+	api.Post("/", CreateStudentAPI)          // Create new student
+	api.Put("/:id", UpdateStudentAPI)        // Update existing student
+	api.Delete("/:id", DeleteStudentAPI)     // Delete student
+
+	// Parent selection API
+	app.Get("/api/parents", GetParentsAPI) // Get parents for selection
 }
 
 func StudentsPage(c *fiber.Ctx) error {
@@ -41,14 +49,6 @@ func StudentsPage(c *fiber.Ctx) error {
 		"Title":       "Students - Swadiq Schools",
 		"CurrentPage": "students",
 		"students":    students,
-		"user":        c.Locals("user"),
-	})
-}
-
-func AddStudentPage(c *fiber.Ctx) error {
-	return c.Render("students/add", fiber.Map{
-		"Title":       "Add Student - Swadiq Schools",
-		"CurrentPage": "students",
 		"user":        c.Locals("user"),
 	})
 }

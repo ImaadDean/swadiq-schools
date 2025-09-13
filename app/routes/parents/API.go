@@ -62,3 +62,26 @@ func CreateParentAPI(c *fiber.Ctx) error {
 		"parent":  parent,
 	})
 }
+
+// SearchParentsAPI handles searching for parents
+func SearchParentsAPI(c *fiber.Ctx) error {
+	query := c.Query("q", "")
+
+	if query == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Search query is required",
+		})
+	}
+
+	db := config.GetDB()
+	parents, err := database.SearchParents(db, query)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"error": "Failed to search parents",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"parents": parents,
+	})
+}
