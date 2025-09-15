@@ -21,9 +21,52 @@ func GetStudentsAPI(c *fiber.Ctx) error {
 	})
 }
 
-// GetStudentsTableAPI returns students formatted for table display
+// GetStudentsStatsAPI returns students statistics for the students page
+func GetStudentsStatsAPI(c *fiber.Ctx) error {
+	// Get database connection
+	db := config.GetDB()
+
+	// Get students statistics
+	stats, err := database.GetStudentsStats(db)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"error":   "Failed to fetch students statistics",
+			"details": err.Error(),
+		})
+	}
+
+	// Return statistics as JSON
+	return c.JSON(fiber.Map{
+		"success": true,
+		"data":    stats,
+	})
+}
+
+// GetStudentsTableAPI returns students formatted for table display with filtering support
 func GetStudentsTableAPI(c *fiber.Ctx) error {
-	students, err := database.GetStudentsWithDetails(config.GetDB())
+	// Get query parameters for filtering
+	search := c.Query("search")
+	status := c.Query("status")
+	classID := c.Query("class_id")
+	gender := c.Query("gender")
+	dateFrom := c.Query("date_from")
+	dateTo := c.Query("date_to")
+	sortBy := c.Query("sort_by", "name")      // default to name
+	sortOrder := c.Query("sort_order", "asc") // default to ascending
+
+	// Create filter parameters
+	filters := database.StudentFilters{
+		Search:    search,
+		Status:    status,
+		ClassID:   classID,
+		Gender:    gender,
+		DateFrom:  dateFrom,
+		DateTo:    dateTo,
+		SortBy:    sortBy,
+		SortOrder: sortOrder,
+	}
+
+	students, err := database.GetStudentsWithFilters(config.GetDB(), filters)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch students"})
 	}

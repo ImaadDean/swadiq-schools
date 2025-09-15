@@ -25,7 +25,9 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Total Students</p>
-                    <p class="text-2xl font-bold text-gray-900 mt-1">1,234</p>
+                    <p id="totalStudents" class="text-2xl font-bold text-gray-900 mt-1">
+                        <span class="inline-block w-16 h-6 bg-gray-200 rounded animate-pulse"></span>
+                    </p>
                 </div>
                 <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                     <i class="fas fa-user-graduate text-blue-600"></i>
@@ -38,7 +40,9 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Active Students</p>
-                    <p class="text-2xl font-bold text-gray-900 mt-1">1,198</p>
+                    <p id="activeStudents" class="text-2xl font-bold text-gray-900 mt-1">
+                        <span class="inline-block w-16 h-6 bg-gray-200 rounded animate-pulse"></span>
+                    </p>
                 </div>
                 <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                     <i class="fas fa-check-circle text-green-600"></i>
@@ -51,7 +55,9 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">New This Month</p>
-                    <p class="text-2xl font-bold text-gray-900 mt-1">24</p>
+                    <p id="newThisMonth" class="text-2xl font-bold text-gray-900 mt-1">
+                        <span class="inline-block w-16 h-6 bg-gray-200 rounded animate-pulse"></span>
+                    </p>
                 </div>
                 <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                     <i class="fas fa-user-plus text-purple-600"></i>
@@ -64,7 +70,9 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Pending Applications</p>
-                    <p class="text-2xl font-bold text-gray-900 mt-1">12</p>
+                    <p id="pendingApplications" class="text-2xl font-bold text-gray-900 mt-1">
+                        <span class="inline-block w-16 h-6 bg-gray-200 rounded animate-pulse"></span>
+                    </p>
                 </div>
                 <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
                     <i class="fas fa-clock text-orange-600"></i>
@@ -79,13 +87,13 @@
             <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
                 <!-- Search -->
                 <div class="relative">
-                    <input type="text" placeholder="Search students..." 
+                    <input id="searchInput" type="text" placeholder="Search students..."
                            class="w-full sm:w-64 pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                     <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 </div>
-                
+
                 <!-- Status Filter -->
-                <select class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white">
+                <select id="statusFilter" class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white">
                     <option value="">All Status</option>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
@@ -95,13 +103,106 @@
             </div>
 
             <div class="flex items-center space-x-2">
-                <button class="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                <button id="moreFiltersBtn" class="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200">
                     <i class="fas fa-filter mr-1"></i>More Filters
                 </button>
-                <button class="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                <button id="sortBtn" class="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200">
                     <i class="fas fa-sort mr-1"></i>Sort
                 </button>
+                <button id="clearFiltersBtn" class="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200 hidden">
+                    <i class="fas fa-times mr-1"></i>Clear
+                </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Advanced Filters Panel (Hidden by default) -->
+    <div id="advancedFiltersPanel" class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Class Filter -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Class</label>
+                <select id="classFilter" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white">
+                    <option value="">All Classes</option>
+                </select>
+            </div>
+
+            <!-- Gender Filter -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                <select id="genderFilter" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white">
+                    <option value="">All Genders</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <!-- Date Range Filter -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Enrolled After</label>
+                <input id="dateFromFilter" type="date" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+            </div>
+
+            <!-- Date Range Filter -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Enrolled Before</label>
+                <input id="dateToFilter" type="date" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+            </div>
+        </div>
+
+        <div class="flex justify-end space-x-2 mt-4 pt-4 border-t border-gray-200">
+            <button id="resetAdvancedFilters" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200">
+                Reset Filters
+            </button>
+            <button id="applyAdvancedFilters" class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200">
+                Apply Filters
+            </button>
+        </div>
+    </div>
+
+    <!-- Sort Options Panel (Hidden by default) -->
+    <div id="sortOptionsPanel" class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                <div class="space-y-2">
+                    <label class="flex items-center">
+                        <input type="radio" name="sortBy" value="name" class="text-primary-600 focus:ring-primary-500" checked>
+                        <span class="ml-2 text-sm text-gray-700">Name (A-Z)</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="sortBy" value="student_id" class="text-primary-600 focus:ring-primary-500">
+                        <span class="ml-2 text-sm text-gray-700">Student ID</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="sortBy" value="class" class="text-primary-600 focus:ring-primary-500">
+                        <span class="ml-2 text-sm text-gray-700">Class</span>
+                    </label>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Order</label>
+                <div class="space-y-2">
+                    <label class="flex items-center">
+                        <input type="radio" name="sortOrder" value="asc" class="text-primary-600 focus:ring-primary-500" checked>
+                        <span class="ml-2 text-sm text-gray-700">Ascending</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="sortOrder" value="desc" class="text-primary-600 focus:ring-primary-500">
+                        <span class="ml-2 text-sm text-gray-700">Descending</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end space-x-2 mt-4 pt-4 border-t border-gray-200">
+            <button id="resetSort" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200">
+                Reset Sort
+            </button>
+            <button id="applySort" class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200">
+                Apply Sort
+            </button>
         </div>
     </div>
 
@@ -120,12 +221,154 @@
                     </tr>
                 </thead>
                 <tbody id="studentsTableBody" class="bg-white divide-y divide-gray-200">
-                    <!-- Loading state -->
-                    <tr id="loadingRow">
-                        <td colspan="6" class="px-4 py-8 text-center">
-                            <div class="flex items-center justify-center">
-                                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
-                                <span class="ml-2 text-gray-500">Loading students...</span>
+                    <!-- Skeleton Loading state -->
+                    <tr id="loadingRow1" class="skeleton-row">
+                        <td class="px-4 py-3">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-gray-200 rounded-full animate-pulse"></div>
+                                <div class="ml-3">
+                                    <div class="h-4 bg-gray-200 rounded animate-pulse w-32 mb-1"></div>
+                                    <div class="h-3 bg-gray-200 rounded animate-pulse w-20"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-4 bg-gray-200 rounded animate-pulse w-24"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-4 bg-gray-200 rounded animate-pulse w-16"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-4 bg-gray-200 rounded animate-pulse w-28"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-6 bg-gray-200 rounded-full animate-pulse w-16"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex space-x-2">
+                                <div class="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+                                <div class="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+                                <div class="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="loadingRow2" class="skeleton-row">
+                        <td class="px-4 py-3">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-gray-200 rounded-full animate-pulse"></div>
+                                <div class="ml-3">
+                                    <div class="h-4 bg-gray-200 rounded animate-pulse w-36 mb-1"></div>
+                                    <div class="h-3 bg-gray-200 rounded animate-pulse w-24"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-4 bg-gray-200 rounded animate-pulse w-24"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-4 bg-gray-200 rounded animate-pulse w-16"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-4 bg-gray-200 rounded animate-pulse w-32"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-6 bg-gray-200 rounded-full animate-pulse w-16"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex space-x-2">
+                                <div class="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+                                <div class="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+                                <div class="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="loadingRow3" class="skeleton-row">
+                        <td class="px-4 py-3">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-gray-200 rounded-full animate-pulse"></div>
+                                <div class="ml-3">
+                                    <div class="h-4 bg-gray-200 rounded animate-pulse w-28 mb-1"></div>
+                                    <div class="h-3 bg-gray-200 rounded animate-pulse w-18"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-4 bg-gray-200 rounded animate-pulse w-24"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-4 bg-gray-200 rounded animate-pulse w-16"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-4 bg-gray-200 rounded animate-pulse w-30"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-6 bg-gray-200 rounded-full animate-pulse w-16"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex space-x-2">
+                                <div class="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+                                <div class="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+                                <div class="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="loadingRow4" class="skeleton-row">
+                        <td class="px-4 py-3">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-gray-200 rounded-full animate-pulse"></div>
+                                <div class="ml-3">
+                                    <div class="h-4 bg-gray-200 rounded animate-pulse w-34 mb-1"></div>
+                                    <div class="h-3 bg-gray-200 rounded animate-pulse w-22"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-4 bg-gray-200 rounded animate-pulse w-24"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-4 bg-gray-200 rounded animate-pulse w-16"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-4 bg-gray-200 rounded animate-pulse w-26"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-6 bg-gray-200 rounded-full animate-pulse w-16"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex space-x-2">
+                                <div class="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+                                <div class="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+                                <div class="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="loadingRow5" class="skeleton-row">
+                        <td class="px-4 py-3">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-gray-200 rounded-full animate-pulse"></div>
+                                <div class="ml-3">
+                                    <div class="h-4 bg-gray-200 rounded animate-pulse w-30 mb-1"></div>
+                                    <div class="h-3 bg-gray-200 rounded animate-pulse w-20"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-4 bg-gray-200 rounded animate-pulse w-24"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-4 bg-gray-200 rounded animate-pulse w-16"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-4 bg-gray-200 rounded animate-pulse w-28"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="h-6 bg-gray-200 rounded-full animate-pulse w-16"></div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex space-x-2">
+                                <div class="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+                                <div class="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+                                <div class="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
                             </div>
                         </td>
                     </tr>
@@ -516,6 +759,7 @@
 </div>
 
 <script>
+console.log('Students page script loaded');
 // Loading utility functions
 function setButtonLoading(button, isLoading, originalText = null) {
     if (isLoading) {
@@ -532,12 +776,16 @@ function setButtonLoading(button, isLoading, originalText = null) {
 
 // Initialize students page functionality
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded event fired');
+
     // Modal elements
     const addStudentBtn = document.getElementById('addStudentBtn');
     const addStudentModal = document.getElementById('addStudentModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const cancelBtn = document.getElementById('cancelBtn');
     const addStudentForm = document.getElementById('addStudentForm');
+
+
 
     // Parent modal elements
     const addParentBtn = document.getElementById('addParentBtn');
@@ -554,9 +802,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const parentsList = document.getElementById('parentsList');
     const noParentsFound = document.getElementById('noParentsFound');
 
-    // Load classes and students on page load
+    // Load classes, students, and stats on page load
     loadClasses();
     loadStudents();
+    loadStats();
 
     // Student ID functionality
     const studentIdInput = document.getElementById('studentId');
@@ -597,6 +846,178 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModal();
         }
     });
+
+    // Search and Filter functionality
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const moreFiltersBtn = document.getElementById('moreFiltersBtn');
+    const sortBtn = document.getElementById('sortBtn');
+    const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+    const advancedFiltersPanel = document.getElementById('advancedFiltersPanel');
+    const sortOptionsPanel = document.getElementById('sortOptionsPanel');
+
+    // Current filters state
+    let currentFilters = {};
+
+    // Search input with debounce
+    let searchTimeout;
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            currentFilters.search = this.value.trim();
+            applyFilters();
+        }, 300); // 300ms debounce
+    });
+
+    // Status filter
+    statusFilter.addEventListener('change', function() {
+        currentFilters.status = this.value;
+        applyFilters();
+    });
+
+    // More filters button
+    moreFiltersBtn.addEventListener('click', function() {
+        const isVisible = !advancedFiltersPanel.classList.contains('hidden');
+        advancedFiltersPanel.classList.toggle('hidden');
+        sortOptionsPanel.classList.add('hidden'); // Hide sort panel
+
+        // Update button appearance
+        if (isVisible) {
+            this.classList.remove('bg-primary-100', 'text-primary-700');
+            this.classList.add('text-gray-600');
+        } else {
+            this.classList.add('bg-primary-100', 'text-primary-700');
+            this.classList.remove('text-gray-600');
+        }
+    });
+
+    // Sort button
+    sortBtn.addEventListener('click', function() {
+        const isVisible = !sortOptionsPanel.classList.contains('hidden');
+        sortOptionsPanel.classList.toggle('hidden');
+        advancedFiltersPanel.classList.add('hidden'); // Hide filters panel
+
+        // Update button appearance
+        if (isVisible) {
+            this.classList.remove('bg-primary-100', 'text-primary-700');
+            this.classList.add('text-gray-600');
+        } else {
+            this.classList.add('bg-primary-100', 'text-primary-700');
+            this.classList.remove('text-gray-600');
+        }
+    });
+
+    // Clear filters button
+    clearFiltersBtn.addEventListener('click', function() {
+        clearAllFilters();
+    });
+
+    // Advanced filters event handlers
+    const classFilter = document.getElementById('classFilter');
+    const genderFilter = document.getElementById('genderFilter');
+    const dateFromFilter = document.getElementById('dateFromFilter');
+    const dateToFilter = document.getElementById('dateToFilter');
+    const applyAdvancedFiltersBtn = document.getElementById('applyAdvancedFilters');
+    const resetAdvancedFiltersBtn = document.getElementById('resetAdvancedFilters');
+
+    // Apply advanced filters
+    applyAdvancedFiltersBtn.addEventListener('click', function() {
+        currentFilters.class_id = classFilter.value;
+        currentFilters.gender = genderFilter.value;
+        currentFilters.date_from = dateFromFilter.value;
+        currentFilters.date_to = dateToFilter.value;
+        applyFilters();
+        advancedFiltersPanel.classList.add('hidden');
+        moreFiltersBtn.classList.remove('bg-primary-100', 'text-primary-700');
+        moreFiltersBtn.classList.add('text-gray-600');
+    });
+
+    // Reset advanced filters
+    resetAdvancedFiltersBtn.addEventListener('click', function() {
+        classFilter.value = '';
+        genderFilter.value = '';
+        dateFromFilter.value = '';
+        dateToFilter.value = '';
+        delete currentFilters.class_id;
+        delete currentFilters.gender;
+        delete currentFilters.date_from;
+        delete currentFilters.date_to;
+        applyFilters();
+    });
+
+    // Sort options event handlers
+    const applySort = document.getElementById('applySort');
+    const resetSort = document.getElementById('resetSort');
+
+    applySort.addEventListener('click', function() {
+        const sortBy = document.querySelector('input[name="sortBy"]:checked').value;
+        const sortOrder = document.querySelector('input[name="sortOrder"]:checked').value;
+        currentFilters.sort_by = sortBy;
+        currentFilters.sort_order = sortOrder;
+        applyFilters();
+        sortOptionsPanel.classList.add('hidden');
+        sortBtn.classList.remove('bg-primary-100', 'text-primary-700');
+        sortBtn.classList.add('text-gray-600');
+    });
+
+    resetSort.addEventListener('click', function() {
+        document.querySelector('input[name="sortBy"][value="name"]').checked = true;
+        document.querySelector('input[name="sortOrder"][value="asc"]').checked = true;
+        delete currentFilters.sort_by;
+        delete currentFilters.sort_order;
+        applyFilters();
+    });
+
+    // Apply filters function
+    function applyFilters() {
+        loadStudents(currentFilters);
+        updateClearFiltersButton();
+    }
+
+    // Clear all filters
+    function clearAllFilters() {
+        // Clear search
+        searchInput.value = '';
+        statusFilter.value = '';
+
+        // Clear advanced filters
+        classFilter.value = '';
+        genderFilter.value = '';
+        dateFromFilter.value = '';
+        dateToFilter.value = '';
+
+        // Clear sort
+        document.querySelector('input[name="sortBy"][value="name"]').checked = true;
+        document.querySelector('input[name="sortOrder"][value="asc"]').checked = true;
+
+        // Reset filters object
+        currentFilters = {};
+
+        // Hide panels
+        advancedFiltersPanel.classList.add('hidden');
+        sortOptionsPanel.classList.add('hidden');
+
+        // Reset button appearances
+        moreFiltersBtn.classList.remove('bg-primary-100', 'text-primary-700');
+        moreFiltersBtn.classList.add('text-gray-600');
+        sortBtn.classList.remove('bg-primary-100', 'text-primary-700');
+        sortBtn.classList.add('text-gray-600');
+
+        // Apply filters
+        applyFilters();
+    }
+
+    // Update clear filters button visibility
+    function updateClearFiltersButton() {
+        const hasFilters = Object.keys(currentFilters).length > 0 &&
+                          Object.values(currentFilters).some(value => value && value.trim() !== '');
+
+        if (hasFilters) {
+            clearFiltersBtn.classList.remove('hidden');
+        } else {
+            clearFiltersBtn.classList.add('hidden');
+        }
+    }
 
     // Close modal with Escape key
     document.addEventListener('keydown', function(e) {
@@ -812,19 +1233,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Parent search functionality
-    let searchTimeout;
+    let parentSearchTimeout;
 
     if (parentSearchInput) {
         parentSearchInput.addEventListener('input', function() {
             const query = this.value.trim();
 
             // Clear previous timeout
-            if (searchTimeout) {
-                clearTimeout(searchTimeout);
+            if (parentSearchTimeout) {
+                clearTimeout(parentSearchTimeout);
             }
 
             // Set new timeout for search
-            searchTimeout = setTimeout(() => {
+            parentSearchTimeout = setTimeout(() => {
                 if (query.length === 0) {
                     resetSearchResults();
                 } else if (query.length >= 2) {
@@ -999,17 +1420,34 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load classes from API
     async function loadClasses() {
         try {
-            const response = await fetch('/api/classes');
+            const response = await fetch('/api/classes', {
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
             const data = await response.json();
 
+            // Populate add student modal class dropdown
             const classSelect = document.getElementById('classId');
             classSelect.innerHTML = '<option value="">Select Class</option>';
 
+            // Populate filter class dropdown
+            const classFilter = document.getElementById('classFilter');
+            classFilter.innerHTML = '<option value="">All Classes</option>';
+
             data.classes.forEach(classItem => {
+                // Add to student modal
                 const option = document.createElement('option');
                 option.value = classItem.id;
                 option.textContent = classItem.name;
                 classSelect.appendChild(option);
+
+                // Add to filter dropdown
+                const filterOption = document.createElement('option');
+                filterOption.value = classItem.id;
+                filterOption.textContent = classItem.name;
+                classFilter.appendChild(filterOption);
             });
         } catch (error) {
             console.error('Error loading classes:', error);
@@ -1042,37 +1480,50 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Search functionality
-    const searchInput = document.querySelector('input[placeholder="Search students..."]');
-    if (searchInput) {
-        searchInput.addEventListener('input', function() {
-            // Add search functionality here
-            console.log('Searching for:', this.value);
-        });
-    }
 
-    // Load students from API
-    async function loadStudents() {
+
+    // Load students from API with optional filters
+    async function loadStudents(filters = {}) {
         const tableBody = document.getElementById('studentsTableBody');
-        const loadingRow = document.getElementById('loadingRow');
         const emptyRow = document.getElementById('emptyRow');
         const errorRow = document.getElementById('errorRow');
 
-        // Show loading state
-        loadingRow.classList.remove('hidden');
+        // Show skeleton loading state
+        showSkeletonLoading();
         emptyRow.classList.add('hidden');
         errorRow.classList.add('hidden');
 
         try {
-            const response = await fetch('/api/students/table');
+            // Build query parameters
+            const params = new URLSearchParams();
+
+            if (filters.search) params.append('search', filters.search);
+            if (filters.status) params.append('status', filters.status);
+            if (filters.class_id) params.append('class_id', filters.class_id);
+            if (filters.gender) params.append('gender', filters.gender);
+            if (filters.date_from) params.append('date_from', filters.date_from);
+            if (filters.date_to) params.append('date_to', filters.date_to);
+            if (filters.sort_by) params.append('sort_by', filters.sort_by);
+            if (filters.sort_order) params.append('sort_order', filters.sort_order);
+
+            const queryString = params.toString();
+            const url = queryString ? `/api/students/table?${queryString}` : '/api/students/table';
+
+
+            const response = await fetch(url, {
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
             if (!response.ok) {
                 throw new Error('Failed to fetch students');
             }
 
             const data = await response.json();
 
-            // Hide loading state
-            loadingRow.classList.add('hidden');
+            // Hide skeleton loading state
+            hideSkeletonLoading();
 
             if (data.students && data.students.length > 0) {
                 renderStudents(data.students);
@@ -1082,8 +1533,72 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (error) {
             console.error('Error loading students:', error);
-            loadingRow.classList.add('hidden');
+            hideSkeletonLoading();
             errorRow.classList.remove('hidden');
+        }
+    }
+
+    // Show skeleton loading
+    function showSkeletonLoading() {
+        const skeletonRows = document.querySelectorAll('.skeleton-row');
+        skeletonRows.forEach(row => row.classList.remove('hidden'));
+
+        // Hide any existing student rows
+        const existingRows = document.querySelectorAll('#studentsTableBody tr:not(.skeleton-row):not(#emptyRow):not(#errorRow)');
+        existingRows.forEach(row => row.remove());
+    }
+
+    // Hide skeleton loading
+    function hideSkeletonLoading() {
+        const skeletonRows = document.querySelectorAll('.skeleton-row');
+        skeletonRows.forEach(row => row.classList.add('hidden'));
+    }
+
+    // Load stats from API
+    async function loadStats() {
+        try {
+            const response = await fetch('/api/students/stats', {
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch stats');
+            }
+
+            const result = await response.json();
+            const stats = result.data;
+
+            // Update stat values with animation
+            updateStatValue('totalStudents', stats.total_students);
+            updateStatValue('activeStudents', stats.active_students);
+            updateStatValue('newThisMonth', stats.new_this_month);
+            updateStatValue('pendingApplications', stats.pending_applications);
+
+        } catch (error) {
+            console.error('Error loading stats:', error);
+            // Show fallback values or error state
+            updateStatValue('totalStudents', '—');
+            updateStatValue('activeStudents', '—');
+            updateStatValue('newThisMonth', '—');
+            updateStatValue('pendingApplications', '—');
+        }
+    }
+
+    // Update stat value with smooth animation
+    function updateStatValue(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            // Add a smooth transition
+            element.style.transition = 'opacity 0.3s ease';
+            element.style.opacity = '0.5';
+
+            setTimeout(() => {
+                const displayValue = typeof value === 'number' ? value.toLocaleString() : value;
+                element.textContent = displayValue;
+                element.style.opacity = '1';
+            }, 150);
         }
     }
 
@@ -1091,9 +1606,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderStudents(students) {
         const tableBody = document.getElementById('studentsTableBody');
 
-        // Clear existing content except state rows
-        const existingRows = tableBody.querySelectorAll('tr:not(#loadingRow):not(#emptyRow):not(#errorRow)');
+        // Clear existing content except state rows and skeleton rows
+        const existingRows = tableBody.querySelectorAll('tr:not(.skeleton-row):not(#emptyRow):not(#errorRow)');
         existingRows.forEach(row => row.remove());
+
+        // Hide skeleton loading
+        hideSkeletonLoading();
 
         students.forEach(student => {
             const row = createStudentRow(student);
@@ -1540,6 +2058,8 @@ document.addEventListener('DOMContentLoaded', function() {
     window.loadStudents = loadStudents;
 });
 </script>
+
+
 
 <!-- View Student Modal -->
 <div id="viewStudentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">

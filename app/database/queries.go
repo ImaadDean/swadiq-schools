@@ -10,6 +10,18 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// StudentFilters represents filtering options for students
+type StudentFilters struct {
+	Search    string
+	Status    string
+	ClassID   string
+	Gender    string
+	DateFrom  string
+	DateTo    string
+	SortBy    string
+	SortOrder string
+}
+
 // hashPassword hashes a password using bcrypt
 func hashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
@@ -226,6 +238,175 @@ func GetStudentsWithDetails(db *sql.DB) ([]models.Student, error) {
 	return students, nil
 }
 
+// GetStudentsWithFilters gets students with filtering, searching, and sorting support
+func GetStudentsWithFilters(db *sql.DB, filters StudentFilters) ([]models.Student, error) {
+	// Build the base query
+	baseQuery := `SELECT s.id, s.student_id, s.first_name, s.last_name, s.date_of_birth,
+				  s.gender, s.address, s.class_id, s.is_active, s.created_at, s.updated_at,
+				  c.name as class_name,
+				  p.first_name as parent_first_name, p.last_name as parent_last_name
+				  FROM students s
+				  LEFT JOIN classes c ON s.class_id = c.id
+				  LEFT JOIN student_parents sp ON s.id = sp.student_id
+				  LEFT JOIN parents p ON sp.parent_id = p.id AND p.is_active = true`
+
+	// Build WHERE conditions
+	var conditions []string
+	var args []interface{}
+	argIndex := 1
+
+	// Always filter for active students unless specifically looking for inactive
+	if filters.Status == "inactive" {
+		conditions = append(conditions, "s.is_active = false")
+	} else if filters.Status == "active" || filters.Status == "" {
+		conditions = append(conditions, "s.is_active = true")
+	}
+
+	// Search filter (name, student ID, or parent name)
+	if filters.Search != "" {
+		searchCondition := fmt.Sprintf(`(
+			LOWER(s.first_name) LIKE LOWER($%d) OR
+			LOWER(s.last_name) LIKE LOWER($%d) OR
+			LOWER(s.student_id) LIKE LOWER($%d) OR
+			LOWER(p.first_name || ' ' || p.last_name) LIKE LOWER($%d)
+		)`, argIndex, argIndex, argIndex, argIndex)
+		conditions = append(conditions, searchCondition)
+		args = append(args, "%"+filters.Search+"%")
+		argIndex++
+	}
+
+	// Class filter
+	if filters.ClassID != "" {
+		conditions = append(conditions, fmt.Sprintf("s.class_id = $%d", argIndex))
+		args = append(args, filters.ClassID)
+		argIndex++
+	}
+
+	// Gender filter
+	if filters.Gender != "" {
+		conditions = append(conditions, fmt.Sprintf("s.gender = $%d", argIndex))
+		args = append(args, filters.Gender)
+		argIndex++
+	}
+
+	// Date range filters
+	if filters.DateFrom != "" {
+		conditions = append(conditions, fmt.Sprintf("s.created_at >= $%d", argIndex))
+		args = append(args, filters.DateFrom)
+		argIndex++
+	}
+
+	if filters.DateTo != "" {
+		conditions = append(conditions, fmt.Sprintf("s.created_at <= $%d", argIndex))
+		args = append(args, filters.DateTo+" 23:59:59")
+		argIndex++
+	}
+
+	// Add WHERE clause if we have conditions
+	query := baseQuery
+	if len(conditions) > 0 {
+		query += " WHERE " + strings.Join(conditions, " AND ")
+	}
+
+	// Add ORDER BY clause
+	orderBy := "s.created_at DESC" // default
+	if filters.SortBy != "" {
+		switch filters.SortBy {
+		case "name":
+			orderBy = "s.first_name, s.last_name"
+		case "student_id":
+			orderBy = "s.student_id"
+		case "class":
+			orderBy = "c.name"
+		default:
+			orderBy = "s.created_at DESC"
+		}
+
+		if filters.SortOrder == "desc" {
+			orderBy += " DESC"
+		} else {
+			orderBy += " ASC"
+		}
+	}
+
+	query += " ORDER BY " + orderBy + " LIMIT 100" // Limit for performance
+
+	rows, err := db.Query(query, args...)
+	if err != nil {
+		return []models.Student{}, err
+	}
+	defer rows.Close()
+
+	// Use a map to handle duplicate students (due to multiple parents)
+	studentMap := make(map[string]*models.Student)
+
+	for rows.Next() {
+		var student models.Student
+		var className, parentFirstName, parentLastName *string
+
+		err := rows.Scan(
+			&student.ID, &student.StudentID, &student.FirstName, &student.LastName,
+			&student.DateOfBirth, &student.Gender, &student.Address,
+			&student.ClassID, &student.IsActive, &student.CreatedAt, &student.UpdatedAt,
+			&className, &parentFirstName, &parentLastName,
+		)
+		if err != nil {
+			continue
+		}
+
+		// Check if student already exists in map
+		if existingStudent, exists := studentMap[student.ID]; exists {
+			// Add parent to existing student if not already added
+			if parentFirstName != nil && parentLastName != nil {
+				parentExists := false
+				parentName := *parentFirstName + " " + *parentLastName
+				for _, p := range existingStudent.Parents {
+					if p.FirstName+" "+p.LastName == parentName {
+						parentExists = true
+						break
+					}
+				}
+				if !parentExists {
+					parent := &models.Parent{
+						FirstName: *parentFirstName,
+						LastName:  *parentLastName,
+					}
+					existingStudent.Parents = append(existingStudent.Parents, parent)
+				}
+			}
+		} else {
+			// Create new student entry
+			if className != nil {
+				student.Class = &models.Class{
+					Name: *className,
+				}
+				if student.ClassID != nil {
+					student.Class.ID = *student.ClassID
+				}
+			}
+
+			// Add parent if exists
+			if parentFirstName != nil && parentLastName != nil {
+				parent := &models.Parent{
+					FirstName: *parentFirstName,
+					LastName:  *parentLastName,
+				}
+				student.Parents = []*models.Parent{parent}
+			}
+
+			studentMap[student.ID] = &student
+		}
+	}
+
+	// Convert map to slice
+	var students []models.Student
+	for _, student := range studentMap {
+		students = append(students, *student)
+	}
+
+	return students, nil
+}
+
 // Helper function to get class names for students
 func getClassNamesForStudents(db *sql.DB, students []models.Student) (map[string]string, error) {
 	classMap := make(map[string]string)
@@ -371,6 +552,46 @@ func GetDashboardStats(db *sql.DB) (map[string]interface{}, error) {
 		return nil, err
 	}
 	stats["total_classes"] = totalClasses
+
+	return stats, nil
+}
+
+// GetStudentsStats returns statistics specifically for the students page (OPTIMIZED)
+func GetStudentsStats(db *sql.DB) (map[string]interface{}, error) {
+	stats := make(map[string]interface{})
+
+	// Single optimized query to get all student statistics
+	query := `
+		SELECT
+			COUNT(*) as total_students,
+			COUNT(CASE WHEN is_active = true THEN 1 END) as active_students,
+			COUNT(CASE WHEN is_active = false THEN 1 END) as pending_applications,
+			COUNT(CASE WHEN DATE_TRUNC('month', created_at) = DATE_TRUNC('month', CURRENT_DATE) THEN 1 END) as new_this_month,
+			COUNT(CASE WHEN gender = 'male' AND is_active = true THEN 1 END) as male_students,
+			COUNT(CASE WHEN gender = 'female' AND is_active = true THEN 1 END) as female_students,
+			COUNT(CASE WHEN created_at >= CURRENT_DATE - INTERVAL '7 days' THEN 1 END) as recent_activity
+		FROM students
+	`
+
+	var totalStudents, activeStudents, pendingApplications, newThisMonth int
+	var maleStudents, femaleStudents, recentActivity int
+
+	err := db.QueryRow(query).Scan(
+		&totalStudents, &activeStudents, &pendingApplications, &newThisMonth,
+		&maleStudents, &femaleStudents, &recentActivity,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	// Set student statistics
+	stats["total_students"] = totalStudents
+	stats["active_students"] = activeStudents
+	stats["pending_applications"] = pendingApplications
+	stats["new_this_month"] = newThisMonth
+	stats["male_students"] = maleStudents
+	stats["female_students"] = femaleStudents
+	stats["recent_activity"] = recentActivity
 
 	return stats, nil
 }
