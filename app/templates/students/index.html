@@ -533,178 +533,109 @@
 </div>
 
 <!-- Add Student Modal -->
+<!-- Add Student Modal -->
 <div id="addStudentModal"
-    class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-slate-200">
-        <!-- Modal Header -->
-        <div class="flex items-center justify-between p-4 md:p-6 border-b border-slate-100 bg-slate-50/30">
-            <div>
-                <h2 class="text-[11px] md:text-[13px] font-black text-slate-900 uppercase tracking-widest">New Student
-                    Enrollment</h2>
-                <p class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1 opacity-60">
-                    Register a new
-                    student to the system</p>
+    class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[9999] hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] shadow-2xl overflow-hidden flex flex-col">
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/30">
+            <div class="flex flex-col gap-0.5">
+                <h3 class="text-sm font-black text-slate-900 uppercase tracking-widest">New Student Enrollment</h3>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Register a new student to
+                    the system</span>
             </div>
-            <button id="closeModalBtn"
-                class="w-8 h-8 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all duration-300 shadow-sm">
-                <i class="fas fa-xmark text-sm"></i>
+            <button id="closeModalBtn" class="text-slate-400 hover:text-slate-600 transition-colors">
+                <i class="fas fa-times"></i>
             </button>
         </div>
-
-        <!-- Modal Body -->
-        <form id="addStudentForm" class="p-4 md:p-6 space-y-4 md:space-y-6">
-            <!-- Student Information -->
-            <div
-                class="bg-white rounded-2xl border border-slate-200/60 p-4 md:p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
-                <div class="flex items-center mb-4 md:mb-6 pb-3 md:pb-4 border-b border-slate-100">
-                    <div
-                        class="w-8 h-8 md:w-10 md:h-10 bg-indigo-50 rounded-xl flex items-center justify-center mr-3 md:mr-4 shadow-sm border border-indigo-100/50">
-                        <i class="fas fa-id-card text-indigo-600 text-xs md:text-sm"></i>
-                    </div>
-                    <div>
-                        <h5 class="text-[11px] md:text-[13px] font-black text-slate-900 uppercase tracking-widest">
-                            Academic Assignment
-                        </h5>
-                        <p
-                            class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 opacity-60">
-                            Class and identification parameters</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    <div>
-                        <label for="studentId"
-                            class="block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 md:mb-2 ml-1 opacity-70">
-                            Identification Reference
-                        </label>
+        <div class="p-6 flex-1 overflow-y-auto sidebar-scrollbar">
+            <form id="addStudentForm" class="space-y-5">
+                <!-- Academic Assignment -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Identification
+                            Reference</label>
                         <input type="text" id="studentId" name="studentId" readonly
-                            class="w-full px-4 py-2 md:py-2.5 text-[10px] md:text-[11px] font-black border border-slate-100 rounded-xl bg-slate-50 text-slate-500 uppercase tracking-wider cursor-not-allowed shadow-inner"
-                            placeholder="System Generated">
+                            class="w-full text-xs font-semibold px-3 py-2.5 border border-slate-100 rounded-lg bg-slate-50 text-slate-400 italic outline-none cursor-not-allowed"
+                            placeholder="STU-2026-001 (will be auto-generated)">
                     </div>
-                    <div>
-                        <label for="classId"
-                            class="block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 md:mb-2 ml-1 opacity-70">Class</label>
-                        <select id="classId" name="classId"
-                            class="w-full px-4 py-2 md:py-2.5 text-[10px] md:text-[11px] font-bold border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 bg-white transition-all duration-300 uppercase tracking-wider">
-                            <option value="">Awaiting Assignment</option>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Class</label>
+                        <select id="classId" name="classId" required
+                            class="w-full text-xs font-semibold px-3 py-2.5 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400 outline-none transition-all">
+                            <option value="">Select Class</option>
                         </select>
                     </div>
                 </div>
-            </div>
 
-            <!-- Personal Information -->
-            <div
-                class="bg-white rounded-2xl border border-slate-200/60 p-4 md:p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
-                <div class="flex items-center mb-4 md:mb-6 pb-3 md:pb-4 border-b border-slate-100">
-                    <div
-                        class="w-8 h-8 md:w-10 md:h-10 bg-purple-50 rounded-xl flex items-center justify-center mr-3 md:mr-4 shadow-sm border border-purple-100/50">
-                        <i class="fas fa-user-gear text-purple-600 text-xs md:text-sm"></i>
-                    </div>
-                    <div>
-                        <h5 class="text-[11px] md:text-[13px] font-black text-slate-900 uppercase tracking-widest">
-                            Personal Information
-                        </h5>
-                        <p
-                            class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 opacity-60">
-                            Student identity details</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    <div>
-                        <label for="firstName"
-                            class="block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 md:mb-2 ml-1 opacity-70">First
-                            Name *</label>
+                <!-- Personal Information -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">First Name *</label>
                         <input type="text" id="firstName" name="firstName" required
-                            class="w-full px-4 py-2 md:py-2.5 text-[10px] md:text-[11px] font-bold border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 bg-white transition-all duration-300 uppercase tracking-wider"
+                            class="w-full text-xs font-semibold px-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400 outline-none transition-all"
                             placeholder="Enter first name...">
                     </div>
-                    <div>
-                        <label for="lastName"
-                            class="block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 md:mb-2 ml-1 opacity-70">Last
-                            Name *</label>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Last Name *</label>
                         <input type="text" id="lastName" name="lastName" required
-                            class="w-full px-4 py-2 md:py-2.5 text-[10px] md:text-[11px] font-bold border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 bg-white transition-all duration-300 uppercase tracking-wider"
+                            class="w-full text-xs font-semibold px-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400 outline-none transition-all"
                             placeholder="Enter last name...">
                     </div>
-                    <div>
-                        <label for="dateOfBirth"
-                            class="block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 md:mb-2 ml-1 opacity-70">Date
-                            of Birth</label>
-                        <input type="date" id="dateOfBirth" name="dateOfBirth"
-                            class="w-full px-4 py-2 md:py-2.5 text-[10px] md:text-[11px] font-bold border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 bg-white transition-all duration-300"
-                            required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Date of
+                            Birth</label>
+                        <input type="date" id="dateOfBirth" name="dateOfBirth" required
+                            class="w-full text-xs font-semibold px-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400 outline-none transition-all">
                     </div>
-                    <div>
-                        <label for="gender"
-                            class="block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 md:mb-2 ml-1 opacity-70">Gender
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Gender
                             Allocation</label>
-                        <select id="gender" name="gender"
-                            class="w-full px-4 py-2 md:py-2.5 text-[10px] md:text-[11px] font-bold border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 bg-white transition-all duration-300 uppercase tracking-wider"
-                            required>
+                        <select id="gender" name="gender" required
+                            class="w-full text-xs font-semibold px-3 py-2.5 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400 outline-none transition-all">
                             <option value="">Not Specified</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                         </select>
                     </div>
-                    <div class="md:col-span-2">
-                        <label for="address"
-                            class="block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 md:mb-2 ml-1 opacity-70">Residential
-                            Address</label>
-                        <textarea id="address" name="address" rows="2"
-                            class="w-full px-4 py-2 md:py-2.5 text-[10px] md:text-[11px] font-bold border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 bg-white transition-all duration-300 uppercase tracking-wider"
-                            placeholder="Enter residential coordinates..."></textarea>
-                    </div>
                 </div>
-            </div>
 
-            <!-- Guardian Network Section -->
-            <div
-                class="bg-white rounded-2xl border border-slate-200/60 p-4 md:p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
-                <div class="flex items-center mb-4 md:mb-6 pb-3 md:pb-4 border-b border-slate-100">
-                    <div
-                        class="w-8 h-8 md:w-10 md:h-10 bg-emerald-50 rounded-xl flex items-center justify-center mr-3 md:mr-4 shadow-sm border border-emerald-100/50">
-                        <i class="fas fa-users-viewfinder text-emerald-600 text-xs md:text-sm"></i>
-                    </div>
-                    <div>
-                        <h5 class="text-[11px] md:text-[13px] font-black text-slate-900 uppercase tracking-widest">
-                            Guardian Information
-                        </h5>
-                        <p
-                            class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 opacity-60">
-                            Primary contact details</p>
-                    </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Residential
+                        Address</label>
+                    <textarea id="address" name="address" rows="2"
+                        class="w-full text-xs font-semibold px-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400 outline-none transition-all"
+                        placeholder="Enter residential coordinates..."></textarea>
                 </div>
-                <div class="space-y-4 md:space-y-6">
-                    <div>
-                        <label
-                            class="block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 md:mb-3 ml-1 opacity-70">Assigned
-                            Guardian</label>
-                        <div class="flex flex-col sm:flex-row gap-2 md:gap-3">
-                            <!-- Hidden input to store selected parent ID -->
-                            <input type="hidden" id="parentId" name="parentId" value="">
 
-                            <!-- Selected parent display -->
-                            <div id="selectedParentDisplay"
-                                class="flex-1 px-4 py-2.5 md:py-3 border border-slate-100 rounded-xl bg-slate-50 text-slate-500 text-[9px] md:text-[10px] font-black uppercase tracking-widest flex items-center shadow-inner min-h-[40px]">
-                                No Selection
-                            </div>
-
-                            <div class="grid grid-cols-2 sm:flex gap-2">
-                                <button type="button" id="searchParentBtn"
-                                    class="px-3 md:px-4 py-2 md:py-2.5 bg-indigo-50 text-indigo-600 border border-indigo-100 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-all duration-300 shadow-sm flex items-center justify-center gap-2">
-                                    <i class="fas fa-search text-[8px] md:text-[9px]"></i>Search
-                                </button>
-                                <button type="button" id="addParentBtn"
-                                    class="px-3 md:px-4 py-2 md:py-2.5 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 hover:text-white transition-all duration-300 shadow-sm flex items-center justify-center gap-2">
-                                    <i class="fas fa-plus text-[8px] md:text-[9px]"></i>Init
-                                </button>
-                            </div>
+                <!-- Guardian Information -->
+                <div class="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Guardian
+                            Information</h3>
+                        <div class="flex gap-2">
+                            <button type="button" id="searchParentBtn"
+                                class="text-[9px] font-black text-indigo-600 uppercase hover:underline">Search</button>
+                            <button type="button" id="addParentBtn"
+                                class="text-[9px] font-black text-indigo-600 uppercase hover:underline">Init
+                                New</button>
                         </div>
                     </div>
-                    <div>
-                        <label for="parentRelationship"
-                            class="block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 md:mb-2 ml-1 opacity-70">Relationship</label>
+
+                    <div class="space-y-1">
+                        <input type="hidden" id="parentId" name="parentId">
+                        <div id="selectedParentDisplay"
+                            class="flex items-center justify-between w-full text-xs font-bold px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-400 italic">
+                            <span>No Guardian Selected</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Relationship</label>
                         <select id="parentRelationship" name="parentRelationship"
-                            class="w-full px-4 py-2 md:py-2.5 text-[10px] md:text-[11px] font-bold border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 bg-white transition-all duration-300 uppercase tracking-wider">
+                            class="w-full text-xs font-semibold px-3 py-2.5 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400 outline-none transition-all">
                             <option value="">Select Relationship</option>
                             <option value="father">Father</option>
                             <option value="mother">Mother</option>
@@ -715,127 +646,126 @@
                         </select>
                     </div>
                 </div>
-            </div>
 
-            <!-- Modal Footer -->
-            <div class="flex items-center justify-end gap-3 pt-8 border-t border-slate-100">
-                <button type="button" id="cancelBtn"
-                    class="px-6 py-2.5 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-xl transition-all duration-200">
-                    Abort
-                </button>
-                <button type="submit"
-                    class="px-8 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-[1.02] transition-all duration-300 border border-white/10">
-                    <i class="fas fa-user-plus mr-2.5 opacity-50"></i>Finalize Enrollment
-                </button>
-            </div>
-        </form>
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="button" id="cancelBtn"
+                        class="flex-1 py-2.5 rounded-xl text-xs font-black text-slate-500 bg-slate-50 hover:bg-slate-100 uppercase transition-all">
+                        Discard
+                    </button>
+                    <button type="submit"
+                        class="flex-[2] py-2.5 rounded-xl text-xs font-black text-white bg-slate-900 hover:bg-slate-800 uppercase shadow-lg transition-all flex items-center justify-center gap-2">
+                        <i class="fas fa-plus"></i>
+                        Initialize Configuration
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <!-- Parent Search Modal -->
 <div id="parentSearchModal"
-    class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+    class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[10000] hidden flex items-center justify-center p-4">
     <div
-        class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[95vh] md:max-h-[90vh] overflow-hidden flex flex-col border border-slate-200">
+        class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[95vh] md:max-h-[90vh] overflow-hidden flex flex-col border border-slate-200">
         <!-- Modal Header -->
-        <div class="flex items-center justify-between p-4 md:p-6 border-b border-slate-100 bg-slate-50/30">
-            <div>
-                <h2 class="text-[11px] md:text-[13px] font-black text-slate-900 uppercase tracking-widest">Parent /
-                    Guardian Search
-                </h2>
-                <p class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1 opacity-60">
-                    Search for an
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/30">
+            <div class="flex flex-col gap-0.5">
+                <h2 class="text-sm font-black text-slate-900 uppercase tracking-widest">Parent / Guardian Search</h2>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">Search for an
                     existing parent or add a new one</p>
             </div>
-            <button id="closeParentSearchBtn"
-                class="w-8 h-8 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all duration-300 shadow-sm">
-                <i class="fas fa-xmark text-sm"></i>
+            <button id="closeParentSearchBtn" class="text-slate-400 hover:text-slate-600 transition-colors">
+                <i class="fas fa-times"></i>
             </button>
         </div>
 
         <!-- Modal Body -->
-        <div class="p-3 md:p-6 overflow-y-auto flex-1">
+        <div class="p-6 overflow-y-auto flex-1 sidebar-scrollbar">
             <!-- Search Bar -->
-            <div class="mb-4 md:mb-8 p-1 bg-slate-50 rounded-2xl border border-slate-100 shadow-inner">
+            <div class="mb-6">
                 <div class="relative group">
                     <input type="text" id="parentSearchInput" placeholder="Search parameters..."
-                        class="w-full pl-10 md:pl-12 pr-4 py-3 md:py-4 text-[10px] md:text-[11px] font-black border-2 border-transparent focus:border-indigo-500/20 rounded-xl focus:outline-none bg-white shadow-sm transition-all duration-300 uppercase tracking-widest placeholder:text-slate-300">
-                    <div class="absolute left-3.5 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
-                        <i class="fas fa-search text-indigo-500 text-xs md:text-sm"></i>
+                        class="w-full pl-10 pr-4 py-2.5 text-xs font-semibold border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400 outline-none transition-all bg-white shadow-sm placeholder:text-slate-400">
+                    <div class="absolute left-3.5 top-1/2 transform -translate-y-1/2 flex items-center">
+                        <i class="fas fa-search text-slate-400 text-xs"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Loading Skeleton for Parents -->
-            <div id="parentsLoading" class="space-y-4 max-h-[400px] md:max-h-96 pr-2 custom-scrollbar">
-                <div class="animate-pulse space-y-4">
+            <div id="parentsLoading" class="space-y-2 max-h-[400px] md:max-h-96 pr-1 custom-scrollbar">
+                <div class="animate-pulse space-y-2">
                     <!-- Parent Item Skeleton -->
                     <div
-                        class="flex flex-col sm:flex-row sm:items-center justify-between p-4 md:p-5 bg-white border border-slate-100 rounded-2xl shadow-sm gap-4">
-                        <div class="flex items-center gap-4">
-                            <div
-                                class="w-10 h-10 md:w-12 md:h-12 bg-slate-50 rounded-xl border border-slate-100 shadow-sm flex-shrink-0">
-                            </div>
-                            <div class="flex-1">
-                                <div class="h-2.5 md:h-3 bg-slate-50 rounded-full w-32 md:w-40 mb-2"></div>
-                                <div class="h-2 bg-slate-50 rounded-full w-48 md:w-64"></div>
+                        class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-slate-200 rounded-lg flex-shrink-0"></div>
+                            <div class="space-y-1.5">
+                                <div class="h-2.5 bg-slate-200 rounded w-24"></div>
+                                <div class="h-2 bg-slate-200 rounded w-32"></div>
                             </div>
                         </div>
-                        <div class="w-full sm:w-24 h-9 md:h-10 bg-slate-50 rounded-xl border border-slate-100"></div>
+                        <div class="w-16 h-6 bg-slate-200 rounded-lg"></div>
                     </div>
-                    <!-- Repeat -->
                     <div
-                        class="flex flex-col sm:flex-row sm:items-center justify-between p-4 md:p-5 bg-white border border-slate-100 rounded-2xl shadow-sm gap-4">
-                        <div class="flex items-center gap-4">
-                            <div
-                                class="w-10 h-10 md:w-12 md:h-12 bg-slate-50 rounded-xl border border-slate-100 shadow-sm flex-shrink-0">
-                            </div>
-                            <div class="flex-1">
-                                <div class="h-2.5 md:h-3 bg-slate-50 rounded-full w-24 md:w-32 mb-2"></div>
-                                <div class="h-2 bg-slate-50 rounded-full w-40 md:w-56"></div>
+                        class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-slate-200 rounded-lg flex-shrink-0"></div>
+                            <div class="space-y-1.5">
+                                <div class="h-2.5 bg-slate-200 rounded w-20"></div>
+                                <div class="h-2 bg-slate-200 rounded w-28"></div>
                             </div>
                         </div>
-                        <div class="w-full sm:w-24 h-9 md:h-10 bg-slate-50 rounded-xl border border-slate-100"></div>
+                        <div class="w-16 h-6 bg-slate-200 rounded-lg"></div>
+                    </div>
+                    <div
+                        class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-slate-200 rounded-lg flex-shrink-0"></div>
+                            <div class="space-y-1.5">
+                                <div class="h-2.5 bg-slate-200 rounded w-24"></div>
+                                <div class="h-2 bg-slate-200 rounded w-32"></div>
+                            </div>
+                        </div>
+                        <div class="w-16 h-6 bg-slate-200 rounded-lg"></div>
                     </div>
                 </div>
             </div>
 
             <!-- Parents List -->
-            <div id="parentsList" class="space-y-3 max-h-96 overflow-y-auto hidden pr-2 custom-scrollbar">
+            <div id="parentsList" class="space-y-2 max-h-96 overflow-y-auto hidden pr-1 custom-scrollbar">
                 <!-- Parents will be loaded here -->
             </div>
 
             <!-- Load More Skeleton Wrapper -->
-            <div id="parentLoadMoreSpinner" class="hidden py-4 animate-pulse">
+            <div id="parentLoadMoreSpinner" class="hidden py-2 animate-pulse">
                 <div
-                    class="flex flex-col sm:flex-row sm:items-center justify-between p-4 md:p-5 bg-white border border-slate-100 rounded-2xl shadow-sm gap-4">
-                    <div class="flex items-center gap-4">
-                        <div
-                            class="w-10 h-10 md:w-12 md:h-12 bg-slate-50 rounded-xl border border-slate-100 shadow-sm flex-shrink-0">
-                        </div>
-                        <div class="flex-1">
-                            <div class="h-2.5 md:h-3 bg-slate-50 rounded-full w-32 md:w-40 mb-2"></div>
-                            <div class="h-2 bg-slate-50 rounded-full w-48 md:w-64"></div>
+                    class="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-xl shadow-sm gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-slate-50 rounded-lg flex-shrink-0 border border-slate-100"></div>
+                        <div class="space-y-1.5">
+                            <div class="h-2.5 bg-slate-50 rounded w-24"></div>
+                            <div class="h-2 bg-slate-50 rounded w-32"></div>
                         </div>
                     </div>
-                    <div class="w-full sm:w-24 h-9 md:h-10 bg-slate-50 rounded-xl border border-slate-100"></div>
+                    <div class="w-16 h-6 bg-slate-50 rounded-lg"></div>
                 </div>
             </div>
 
             <!-- No Results -->
             <div id="noParentsFound"
-                class="hidden text-center py-12 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
+                class="hidden text-center py-10 bg-slate-50 rounded-xl border border-dashed border-slate-200">
                 <div
-                    class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 border border-slate-200 shadow-sm">
-                    <i class="fas fa-users-slash text-slate-300 text-2xl"></i>
+                    class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mx-auto mb-3 border border-slate-100 shadow-sm">
+                    <i class="fas fa-users-slash text-slate-300 text-lg"></i>
                 </div>
-                <h4 class="text-[12px] font-black text-slate-900 uppercase tracking-widest">No Parents Found
-                </h4>
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Create a new parent
+                <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-widest">No Parents Found</h4>
+                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1 mb-4">Create a new parent
                     record to get started</p>
                 <button type="button" id="createNewParentBtn"
-                    class="mt-6 px-6 py-2.5 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-[1.02] transition-all duration-300">
-                    <i class="fas fa-plus mr-2 opacity-70"></i>Add New Parent
+                    class="px-5 py-2 bg-slate-900 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all shadow-sm">
+                    <i class="fas fa-plus mr-2"></i>Add New Parent
                 </button>
             </div>
         </div>
@@ -845,115 +775,82 @@
 <!-- Add Parent Modal -->
 <div id="addParentModal"
     class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-[70] flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-slate-200">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-slate-200">
         <!-- Modal Header -->
-        <div class="flex items-center justify-between p-4 md:p-6 border-b border-slate-100 bg-slate-50/30">
-            <div>
-                <h2 class="text-[11px] md:text-[13px] font-black text-slate-900 uppercase tracking-widest">Register New
-                    Parent</h2>
-                <p class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1 opacity-60">
-                    Enter parent /
-                    guardian details below</p>
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/30">
+            <div class="flex flex-col gap-0.5">
+                <h2 class="text-sm font-black text-slate-900 uppercase tracking-widest">Register New Parent</h2>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Enter parent / guardian
+                    details below</p>
             </div>
-            <button id="closeParentModalBtn"
-                class="w-8 h-8 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all duration-300 shadow-sm">
-                <i class="fas fa-xmark text-sm"></i>
+            <button id="closeParentModalBtn" class="text-slate-400 hover:text-slate-600 transition-colors">
+                <i class="fas fa-times"></i>
             </button>
         </div>
 
         <!-- Modal Body -->
-        <form id="addParentForm" class="p-4 md:p-6 space-y-4 md:space-y-6">
+        <form id="addParentForm" class="p-6 space-y-6">
             <!-- Personal Information -->
-            <div
-                class="bg-white rounded-2xl border border-slate-200/60 p-4 md:p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
-                <div class="flex items-center mb-4 md:mb-6 pb-3 md:pb-4 border-b border-slate-100">
-                    <div
-                        class="w-8 h-8 md:w-10 md:h-10 bg-indigo-50 rounded-xl flex items-center justify-center mr-3 md:mr-4 shadow-sm border border-indigo-100/50">
-                        <i class="fas fa-user-gear text-indigo-600 text-xs md:text-sm"></i>
-                    </div>
-                    <div>
-                        <h5 class="text-[11px] md:text-[13px] font-black text-slate-900 uppercase tracking-widest">
-                            Personal Details
-                        </h5>
-                        <p
-                            class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 opacity-60">
-                            Primary identity information</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    <div>
-                        <label for="parentFirstName"
-                            class="block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 md:mb-2 ml-1 opacity-70">First
-                            Name *</label>
+            <div class="space-y-4">
+                <h4
+                    class="text-[11px] font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-2 flex items-center gap-2">
+                    <i class="fas fa-user-circle text-indigo-500"></i> Personal Details
+                </h4>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">First Name *</label>
                         <input type="text" id="parentFirstName" name="firstName" required
-                            class="w-full px-4 py-2 md:py-2.5 text-[10px] md:text-[11px] font-bold border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 bg-white transition-all duration-300 uppercase tracking-wider"
+                            class="w-full text-xs font-semibold px-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400 outline-none transition-all"
                             placeholder="Enter first name...">
                     </div>
-                    <div>
-                        <label for="parentLastName"
-                            class="block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 md:mb-2 ml-1 opacity-70">Last
-                            Name *</label>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Last Name *</label>
                         <input type="text" id="parentLastName" name="lastName" required
-                            class="w-full px-4 py-2 md:py-2.5 text-[10px] md:text-[11px] font-bold border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 bg-white transition-all duration-300 uppercase tracking-wider"
+                            class="w-full text-xs font-semibold px-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400 outline-none transition-all"
                             placeholder="Enter last name...">
                     </div>
                 </div>
             </div>
 
             <!-- Contact Information -->
-            <div
-                class="bg-white rounded-2xl border border-slate-200/60 p-4 md:p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
-                <div class="flex items-center mb-4 md:mb-6 pb-3 md:pb-4 border-b border-slate-100">
-                    <div
-                        class="w-8 h-8 md:w-10 md:h-10 bg-emerald-50 rounded-xl flex items-center justify-center mr-3 md:mr-4 shadow-sm border border-emerald-100/50">
-                        <i class="fas fa-link text-emerald-600 text-xs md:text-sm"></i>
-                    </div>
-                    <div>
-                        <h5 class="text-[11px] md:text-[13px] font-black text-slate-900 uppercase tracking-widest">
-                            Contact Information
-                        </h5>
-                        <p
-                            class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 opacity-60">
-                            Primary contact details</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 gap-4 md:gap-6">
-                    <div>
-                        <label for="parentPhone"
-                            class="block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 md:mb-2 ml-1 opacity-70">Phone
-                            Number</label>
+            <div class="space-y-4">
+                <h4
+                    class="text-[11px] font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-2 flex items-center gap-2">
+                    <i class="fas fa-address-card text-emerald-500"></i> Contact Information
+                </h4>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Phone Number</label>
                         <input type="tel" id="parentPhone" name="phone"
-                            class="w-full px-4 py-2 md:py-2.5 text-[10px] md:text-[11px] font-bold border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 bg-white transition-all duration-300"
+                            class="w-full text-xs font-semibold px-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400 outline-none transition-all"
                             placeholder="Enter phone number...">
                     </div>
-                    <div>
-                        <label for="parentEmail"
-                            class="block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 md:mb-2 ml-1 opacity-70">Email
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Email
                             Address</label>
                         <input type="email" id="parentEmail" name="email"
-                            class="w-full px-4 py-2 md:py-2.5 text-[10px] md:text-[11px] font-bold border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 bg-white transition-all duration-300"
+                            class="w-full text-xs font-semibold px-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400 outline-none transition-all"
                             placeholder="Enter verified email...">
                     </div>
-                    <div>
-                        <label for="parentAddress"
-                            class="block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 md:mb-2 ml-1 opacity-70">Home
-                            Address</label>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Home Address</label>
                         <textarea id="parentAddress" name="address" rows="2"
-                            class="w-full px-4 py-2 md:py-2.5 text-[10px] md:text-[11px] font-bold border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 bg-white transition-all duration-300 uppercase tracking-wider"
+                            class="w-full text-xs font-semibold px-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900/5 focus:border-slate-400 outline-none transition-all"
                             placeholder="Enter residential address..."></textarea>
                     </div>
                 </div>
             </div>
 
             <!-- Modal Footer -->
-            <div class="flex items-center justify-end gap-3 pt-8 border-t border-slate-100">
+            <div class="flex items-center gap-3 pt-2">
                 <button type="button" id="cancelParentBtn"
-                    class="px-6 py-2.5 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-xl transition-all duration-200">
-                    Abort
+                    class="flex-1 py-2.5 rounded-xl text-xs font-black text-slate-500 bg-slate-50 hover:bg-slate-100 uppercase transition-all">
+                    Discard
                 </button>
                 <button type="submit"
-                    class="px-8 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-[1.02] transition-all duration-300 border border-white/10">
-                    <i class="fas fa-plus mr-2.5 opacity-50"></i>Add Parent
+                    class="flex-[2] py-2.5 rounded-xl text-xs font-black text-white bg-slate-900 hover:bg-slate-800 uppercase shadow-lg transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-plus"></i>
+                    Add Parent
                 </button>
             </div>
         </form>
@@ -1610,28 +1507,28 @@
 
                     data.parents.forEach(parent => {
                         const parentDiv = document.createElement('div');
-                        parentDiv.className = 'group p-4 md:p-5 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md hover:border-indigo-100/50 transition-all duration-300 cursor-pointer mb-3 last:mb-0';
+                        parentDiv.className = 'group p-3 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md hover:border-indigo-100 transition-all duration-300 cursor-pointer mb-2 last:mb-0';
                         parentDiv.innerHTML = `
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 md:w-12 md:h-12 bg-slate-50 group-hover:bg-indigo-50 rounded-xl flex items-center justify-center text-slate-400 group-hover:text-indigo-600 font-black text-[10px] md:text-xs uppercase transition-colors shadow-sm border border-slate-100 group-hover:border-indigo-100 flex-shrink-0">
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="flex items-center gap-3 overflow-hidden">
+                                    <div class="w-8 h-8 md:w-9 md:h-9 bg-slate-50 group-hover:bg-indigo-50 rounded-lg flex items-center justify-center text-slate-400 group-hover:text-indigo-600 font-black text-[9px] md:text-[10px] uppercase transition-colors shadow-sm border border-slate-100 group-hover:border-indigo-100 flex-shrink-0">
                                         ${parent.first_name[0]}${parent.last_name[0]}
                                     </div>
-                                    <div class="flex-1 min-w-0">
-                                        <h4 class="text-[10px] md:text-[11px] font-black text-slate-900 uppercase tracking-widest truncate">${parent.first_name} ${parent.last_name}</h4>
-                                        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1">
-                                            <span class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2 leading-none whitespace-nowrap">
-                                                <i class="fas fa-phone text-emerald-500 text-[8px] md:text-[9px]"></i>${parent.phone || 'NO PHONE'}
+                                    <div class="flex flex-col min-w-0">
+                                        <h4 class="text-[10px] md:text-[11px] font-black text-slate-900 uppercase tracking-widest truncate group-hover:text-indigo-700 transition-colors">${parent.first_name} ${parent.last_name}</h4>
+                                        <div class="flex items-center gap-3 mt-0.5">
+                                            <span class="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-1.5 leading-none whitespace-nowrap">
+                                                <i class="fas fa-phone text-emerald-500 text-[8px]"></i>${parent.phone || 'N/A'}
                                             </span>
                                             ${parent.email ? `
-                                            <span class="text-[9px] md:text-[10px] text-slate-400 font-bold lowercase tracking-widest flex items-center gap-2 leading-none whitespace-nowrap">
-                                                <i class="fas fa-envelope-open-text text-purple-500 text-[8px] md:text-[9px]"></i>${parent.email}
+                                            <span class="text-[8px] md:text-[9px] text-slate-400 font-bold lowercase tracking-widest flex items-center gap-1.5 leading-none whitespace-nowrap truncate">
+                                                <i class="fas fa-envelope text-purple-500 text-[8px]"></i>${parent.email}
                                             </span>` : ''}
                                         </div>
                                     </div>
                                 </div>
-                                <button class="w-full sm:w-auto px-4 py-2.5 bg-indigo-50 text-indigo-600 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-all duration-300 shadow-sm border border-indigo-100/50">
-                                    Select Parent
+                                <button class="px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg text-[9px] font-black uppercase tracking-widest group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300 shadow-sm border border-indigo-100/50 flex-shrink-0">
+                                    Select
                                 </button>
                             </div>
                         `;

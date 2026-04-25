@@ -1,0 +1,292 @@
+<div class="p-4 lg:p-8 animate-fade-in">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Analytics & <span
+                    class="text-indigo-600">Reports</span></h1>
+            <p class="text-sm font-bold text-slate-500 mt-1 uppercase tracking-wider">Comprehensive school data overview
+            </p>
+        </div>
+        <div class="flex items-center gap-3">
+            <button
+                class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-black text-slate-700 hover:bg-slate-50 transition-all shadow-sm flex items-center gap-2 uppercase tracking-wider">
+                <i class="fas fa-calendar-alt text-indigo-500"></i>
+                Select Period
+            </button>
+            <button
+                class="px-5 py-2 premium-gradient text-white rounded-xl text-xs font-black hover:shadow-lg hover:shadow-indigo-200 transition-all flex items-center gap-2 uppercase tracking-wider">
+                <i class="fas fa-download"></i>
+                Export All
+            </button>
+        </div>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div
+            class="glass-card p-5 rounded-3xl relative overflow-hidden group hover:shadow-xl transition-all duration-500 border-b-4 border-indigo-500">
+            <div class="flex items-center gap-4 relative z-10">
+                <div
+                    class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform duration-500 shadow-sm">
+                    <i class="fas fa-user-graduate text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Total Students</p>
+                    <h3 class="text-2xl font-black text-slate-900 mt-0.5 tracking-tight">{{.Stats.TotalStudents}}</h3>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-black relative z-10">
+                <span class="text-emerald-500 flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded-full"><i
+                        class="fas fa-arrow-up"></i> 12%</span>
+                <span class="text-slate-400 capitalize">Since last term</span>
+            </div>
+            <i
+                class="fas fa-user-graduate absolute -right-4 -bottom-4 text-7xl text-slate-50 opacity-[0.03] group-hover:scale-110 transition-transform duration-500"></i>
+        </div>
+
+        <div
+            class="glass-card p-5 rounded-3xl relative overflow-hidden group hover:shadow-xl transition-all duration-500 border-b-4 border-purple-500">
+            <div class="flex items-center gap-4 relative z-10">
+                <div
+                    class="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform duration-500 shadow-sm">
+                    <i class="fas fa-chalkboard-teacher text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Active Staff</p>
+                    <h3 class="text-2xl font-black text-slate-900 mt-0.5 tracking-tight">{{.Stats.TotalTeachers}}</h3>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-black relative z-10">
+                <span class="text-emerald-500 flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded-full"><i
+                        class="fas fa-check"></i> Stable</span>
+                <span class="text-slate-400 capitalize">Normal operations</span>
+            </div>
+            <i
+                class="fas fa-chalkboard-teacher absolute -right-4 -bottom-4 text-7xl text-slate-50 opacity-[0.03] group-hover:scale-110 transition-transform duration-500"></i>
+        </div>
+
+        <div
+            class="glass-card p-5 rounded-3xl relative overflow-hidden group hover:shadow-xl transition-all duration-500 border-b-4 border-emerald-500">
+            <div class="flex items-center gap-4 relative z-10">
+                <div
+                    class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform duration-500 shadow-sm">
+                    <i class="fas fa-chart-line text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Revenue (MTD)</p>
+                    <h3 class="text-2xl font-black text-slate-900 mt-0.5 tracking-tight">${{.Stats.MonthlyRevenue}}</h3>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-black relative z-10">
+                <span class="text-emerald-500 flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded-full"><i
+                        class="fas fa-arrow-up"></i> {{.Stats.FeeCollectionRate}}%</span>
+                <span class="text-slate-400 capitalize">Collection rate</span>
+            </div>
+            <i
+                class="fas fa-dollar-sign absolute -right-4 -bottom-4 text-7xl text-slate-50 opacity-[0.03] group-hover:scale-110 transition-transform duration-500"></i>
+        </div>
+
+        <div
+            class="glass-card p-5 rounded-3xl relative overflow-hidden group hover:shadow-xl transition-all duration-500 border-b-4 border-rose-500">
+            <div class="flex items-center gap-4 relative z-10">
+                <div
+                    class="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-600 group-hover:scale-110 transition-transform duration-500 shadow-sm">
+                    <i class="fas fa-calendar-check text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Attendance</p>
+                    <h3 class="text-2xl font-black text-slate-900 mt-0.5 tracking-tight">{{.Stats.StudentAttendance}}%
+                    </h3>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-black relative z-10">
+                <span class="text-rose-500 flex items-center gap-1 bg-rose-50 px-2 py-0.5 rounded-full"><i
+                        class="fas fa-arrow-down"></i> 2.4%</span>
+                <span class="text-slate-400 capitalize">Since yesterday</span>
+            </div>
+            <i
+                class="fas fa-user-check absolute -right-4 -bottom-4 text-7xl text-slate-50 opacity-[0.03] group-hover:scale-110 transition-transform duration-500"></i>
+        </div>
+    </div>
+
+    <!-- Reports Sections Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Academic Reports -->
+        <div class="space-y-6">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-8 h-8 rounded-xl bg-indigo-500 flex items-center justify-center text-white shadow-lg shadow-indigo-100">
+                    <i class="fas fa-graduation-cap text-xs"></i>
+                </div>
+                <h2 class="text-sm font-black text-slate-800 uppercase tracking-widest">Academic <span
+                        class="text-indigo-600">Reports</span></h2>
+            </div>
+            <div class="space-y-3">
+                <button
+                    class="w-full glass-card p-4 rounded-2xl flex items-center justify-between group hover:border-indigo-500 hover:bg-slate-50/50 transition-all duration-300">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-500 group-hover:text-indigo-600 transition-colors">
+                            <i class="fas fa-users-viewfinder"></i>
+                        </div>
+                        <div class="text-left">
+                            <p
+                                class="text-[11px] font-black text-slate-800 group-hover:text-indigo-600 transition-colors">
+                                Enrollment Analysis</p>
+                            <p class="text-[9px] font-bold text-slate-400">Trends by class & gender</p>
+                        </div>
+                    </div>
+                    <i
+                        class="fas fa-chevron-right text-[10px] text-slate-300 group-hover:text-indigo-500 transition-all group-hover:translate-x-1"></i>
+                </button>
+                <button
+                    class="w-full glass-card p-4 rounded-2xl flex items-center justify-between group hover:border-indigo-500 hover:bg-slate-50/50 transition-all duration-300">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-500 group-hover:text-indigo-600 transition-colors">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="text-left">
+                            <p
+                                class="text-[11px] font-black text-slate-800 group-hover:text-indigo-600 transition-colors">
+                                Performance Ranking</p>
+                            <p class="text-[9px] font-bold text-slate-400">Class & subject merit lists</p>
+                        </div>
+                    </div>
+                    <i
+                        class="fas fa-chevron-right text-[10px] text-slate-300 group-hover:text-indigo-500 transition-all group-hover:translate-x-1"></i>
+                </button>
+                <button
+                    class="w-full glass-card p-4 rounded-2xl flex items-center justify-between group hover:border-indigo-500 hover:bg-slate-50/50 transition-all duration-300">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-500 group-hover:text-indigo-600 transition-colors">
+                            <i class="fas fa-clock-rotate-left"></i>
+                        </div>
+                        <div class="text-left">
+                            <p
+                                class="text-[11px] font-black text-slate-800 group-hover:text-indigo-600 transition-colors">
+                                Attendance Summary</p>
+                            <p class="text-[9px] font-bold text-slate-400">Monthly attendance insights</p>
+                        </div>
+                    </div>
+                    <i
+                        class="fas fa-chevron-right text-[10px] text-slate-300 group-hover:text-indigo-500 transition-all group-hover:translate-x-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Financial Reports -->
+        <div class="space-y-6">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center text-white shadow-lg shadow-emerald-100">
+                    <i class="fas fa-money-bill-trend-up text-xs"></i>
+                </div>
+                <h2 class="text-sm font-black text-slate-800 uppercase tracking-widest">Financial <span
+                        class="text-emerald-600">Reports</span></h2>
+            </div>
+            <div class="space-y-3">
+                <button
+                    class="w-full glass-card p-4 rounded-2xl flex items-center justify-between group hover:border-emerald-500 hover:bg-slate-50/50 transition-all duration-300">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-500 group-hover:text-emerald-600 transition-colors">
+                            <i class="fas fa-wallet text-sm"></i>
+                        </div>
+                        <div class="text-left">
+                            <p
+                                class="text-[11px] font-black text-slate-800 group-hover:text-emerald-600 transition-colors">
+                                Fee Collection Report</p>
+                            <p class="text-[9px] font-bold text-slate-400">Complete breakdown by term</p>
+                        </div>
+                    </div>
+                    <i
+                        class="fas fa-chevron-right text-[10px] text-slate-300 group-hover:text-emerald-500 transition-all group-hover:translate-x-1"></i>
+                </button>
+                <button
+                    class="w-full glass-card p-4 rounded-2xl flex items-center justify-between group hover:border-emerald-500 hover:bg-slate-50/50 transition-all duration-300">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-500 group-hover:text-emerald-600 transition-colors">
+                            <i class="fas fa-file-invoice text-sm"></i>
+                        </div>
+                        <div class="text-left">
+                            <p
+                                class="text-[11px] font-black text-slate-800 group-hover:text-emerald-600 transition-colors">
+                                Expense Analytics</p>
+                            <p class="text-[9px] font-bold text-slate-400">Category-wise spending trends</p>
+                        </div>
+                    </div>
+                    <i
+                        class="fas fa-chevron-right text-[10px] text-slate-300 group-hover:text-emerald-500 transition-all group-hover:translate-x-1"></i>
+                </button>
+                <button
+                    class="w-full glass-card p-4 rounded-2xl flex items-center justify-between group hover:border-emerald-500 hover:bg-slate-50/50 transition-all duration-300">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-500 group-hover:text-emerald-600 transition-colors">
+                            <i class="fas fa-receipt text-sm"></i>
+                        </div>
+                        <div class="text-left">
+                            <p
+                                class="text-[11px] font-black text-slate-800 group-hover:text-emerald-600 transition-colors">
+                                Payroll Statement</p>
+                            <p class="text-[9px] font-bold text-slate-400">Monthly staff salary overview</p>
+                        </div>
+                    </div>
+                    <i
+                        class="fas fa-chevron-right text-[10px] text-slate-300 group-hover:text-emerald-500 transition-all group-hover:translate-x-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Staff & Admin Reports -->
+        <div class="space-y-6">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-8 h-8 rounded-xl bg-purple-500 flex items-center justify-center text-white shadow-lg shadow-purple-100">
+                    <i class="fas fa-users-cog text-xs"></i>
+                </div>
+                <h2 class="text-sm font-black text-slate-800 uppercase tracking-widest">Administrative <span
+                        class="text-purple-600">Reports</span></h2>
+            </div>
+            <div class="space-y-3">
+                <button
+                    class="w-full glass-card p-4 rounded-2xl flex items-center justify-between group hover:border-purple-500 hover:bg-slate-50/50 transition-all duration-300">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-500 group-hover:text-purple-600 transition-colors">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="text-left">
+                            <p
+                                class="text-[11px] font-black text-slate-800 group-hover:text-purple-600 transition-colors">
+                                Staff Workload</p>
+                            <p class="text-[9px] font-bold text-slate-400">Subject assignment & hours</p>
+                        </div>
+                    </div>
+                    <i
+                        class="fas fa-chevron-right text-[10px] text-slate-300 group-hover:text-purple-500 transition-all group-hover:translate-x-1"></i>
+                </button>
+                <button
+                    class="w-full glass-card p-4 rounded-2xl flex items-center justify-between group hover:border-purple-500 hover:bg-slate-50/50 transition-all duration-300">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-500 group-hover:text-purple-600 transition-colors">
+                            <i class="fas fa-shield-halved"></i>
+                        </div>
+                        <div class="text-left">
+                            <p
+                                class="text-[11px] font-black text-slate-800 group-hover:text-purple-600 transition-colors">
+                                Activity Logs</p>
+                            <p class="text-[9px] font-bold text-slate-400">System access & changes</p>
+                        </div>
+                    </div>
+                    <i
+                        class="fas fa-chevron-right text-[10px] text-slate-300 group-hover:text-purple-500 transition-all group-hover:translate-x-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

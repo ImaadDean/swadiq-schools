@@ -1,6 +1,7 @@
 package students
 
 import (
+	"log"
 	"strings"
 	"swadiq-schools/app/config"
 	"swadiq-schools/app/database"
@@ -455,6 +456,37 @@ func CreateStudentAPI(c *fiber.Ctx) error {
 		}
 		if err := database.LinkStudentToParent(config.GetDB(), student.ID, req.ParentID, relationship); err != nil {
 			return c.Status(500).JSON(fiber.Map{"error": "Failed to link student to parent"})
+		}
+	}
+
+	// Auto-assign class fees if student is assigned to a class
+	if req.ClassID != "" {
+		db := config.GetDB()
+		currentTerm, err := database.GetCurrentTerm(db)
+		if err == nil && currentTerm != nil {
+			classFees, err := database.GetClassFees(db, req.ClassID, currentTerm.ID)
+			if err == nil {
+				for _, cf := range classFees {
+					// Only auto-assign if the fee is required
+					if !cf.IsRequired {
+						continue
+					}
+
+					// Create fee record for this student
+					title := cf.FeeType.Name
+					// Due date: 30 days from now
+					dueDate := time.Now().AddDate(0, 0, 30)
+
+					_, err := db.Exec(`
+						INSERT INTO fees (student_id, fee_type_id, academic_year_id, term_id, title, amount, balance, due_date, created_at, updated_at)
+						VALUES ($1, $2, $3, $4, $5, $6, $6, $7, NOW(), NOW())
+					`, student.ID, cf.FeeTypeID, currentTerm.AcademicYearID, currentTerm.ID, title, cf.Amount, dueDate)
+
+					if err != nil {
+						log.Printf("Failed to auto-assign class fee %s to student %s: %v", cf.ID, student.ID, err)
+					}
+				}
+			}
 		}
 	}
 

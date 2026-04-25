@@ -75,6 +75,18 @@ func RunMigrations(db *sql.DB) error {
 		return err
 	}
 
+	// 12. Create class_fees table
+	err = createClassFeesTable(db)
+	if err != nil {
+		return err
+	}
+
+	// 13. Add is_required to class_fees
+	err = addClassFeesIsRequiredColumn(db)
+	if err != nil {
+		return err
+	}
+
 	log.Println("Database migrations completed successfully")
 	return nil
 }
@@ -279,6 +291,28 @@ func createTeacherAttendancesTable(db *sql.DB) error {
 		updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
 		UNIQUE(teacher_id, date)
 	)`
+	_, err := db.Exec(query)
+	return err
+}
+
+func createClassFeesTable(db *sql.DB) error {
+	query := `CREATE TABLE IF NOT EXISTS class_fees (
+		id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+		class_id UUID NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
+		fee_type_id UUID NOT NULL REFERENCES fee_types(id) ON DELETE CASCADE,
+		term_id UUID NOT NULL REFERENCES terms(id) ON DELETE CASCADE,
+		amount DECIMAL(10,2) NOT NULL,
+		is_required BOOLEAN NOT NULL DEFAULT true,
+		created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+		updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+		UNIQUE(class_id, fee_type_id, term_id)
+	)`
+	_, err := db.Exec(query)
+	return err
+}
+
+func addClassFeesIsRequiredColumn(db *sql.DB) error {
+	query := `ALTER TABLE class_fees ADD COLUMN IF NOT EXISTS is_required BOOLEAN NOT NULL DEFAULT true`
 	_, err := db.Exec(query)
 	return err
 }

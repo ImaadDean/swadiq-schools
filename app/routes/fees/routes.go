@@ -49,6 +49,14 @@ func SetupFeesRoutes(app *fiber.App) {
 		return GetFeeStatsAPI(c, config.GetDB())
 	})
 
+	feesAPI.Get("/class-fees", func(c *fiber.Ctx) error {
+		return GetClassFeesAPI(c)
+	})
+
+	feesAPI.Post("/class-fees", func(c *fiber.Ctx) error {
+		return UpsertClassFeeAPI(c)
+	})
+
 	feesAPI.Get("/:id", func(c *fiber.Ctx) error {
 		return GetFeeByIDAPI(c, config.GetDB())
 	})

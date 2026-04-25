@@ -209,6 +209,84 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Class Fees Section -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex flex-col gap-0.5">
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="text-[10px] font-black text-slate-900 bg-slate-100 px-2 py-1 rounded-md uppercase tracking-widest">Fee
+                                Protocols</span>
+                            <div class="h-px bg-slate-100 w-12"></div>
+                        </div>
+                        <h2 class="text-xs font-black text-slate-700 uppercase tracking-tight">Class Default Fees</h2>
+                    </div>
+                </div>
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+                    <div class="p-6 border-b border-slate-50 bg-slate-50/30">
+                        <div class="flex flex-col md:flex-row md:items-end gap-6">
+                            <div class="flex-1 space-y-2">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-filter text-[10px] text-slate-400"></i>
+                                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Target
+                                        Class</label>
+                                </div>
+                                <div class="relative group">
+                                    <select id="classFeeSelector" onchange="loadClassFeeAmounts()"
+                                        class="w-full text-xs font-bold px-4 py-3 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-slate-900/5 focus:border-slate-900 transition-all cursor-pointer appearance-none">
+                                        <option value="">Choose a class to configure</option>
+                                    </select>
+                                    <i
+                                        class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-slate-300 pointer-events-none group-hover:text-slate-400 transition-colors"></i>
+                                </div>
+                            </div>
+                            <div class="hidden md:block w-px h-12 bg-slate-100"></div>
+                            <div class="flex-1">
+                                <div class="flex flex-col gap-1">
+                                    <span
+                                        class="text-[10px] font-black text-slate-900 uppercase tracking-tight">Configuration
+                                        Mode</span>
+                                    <p
+                                        class="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
+                                        Override global defaults for class-specific financial requirements.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-6">
+                        <div id="classFeeAmountsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div
+                                class="col-span-full flex flex-col items-center justify-center py-12 border-2 border-dashed border-slate-100 rounded-3xl bg-slate-50/50">
+                                <div
+                                    class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm mb-4 transform rotate-3">
+                                    <i class="fas fa-coins text-slate-200 text-xl"></i>
+                                </div>
+                                <p
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center max-w-[200px] leading-relaxed">
+                                    Select a class above to begin configuration
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="classFeeActions"
+                            class="hidden pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                                <span
+                                    class="text-[9px] font-bold text-slate-400 uppercase tracking-widest underline decoration-blue-500/30 underline-offset-4">Changes
+                                    sync to active term only</span>
+                            </div>
+                            <button onclick="saveClassFees()" id="saveClassFeesBtn"
+                                class="bg-slate-900 text-white px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all transform hover:-translate-y-0.5 active:translate-y-0 shadow-xl shadow-slate-200 flex items-center justify-center gap-3">
+                                <i class="fas fa-save text-[10px]"></i>
+                                <span>Commit Changes</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Sidebar -->
@@ -730,6 +808,20 @@
             }
 
             renderAssessmentCategories(categories);
+
+            // Populate class fee selector
+            const feeSelector = document.getElementById('classFeeSelector');
+            if (feeSelector) {
+                const currentVal = feeSelector.value;
+                feeSelector.innerHTML = '<option value="">Select Class</option>';
+                (allAvailableClasses || []).forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+                    feeSelector.appendChild(opt);
+                });
+                if (currentVal) feeSelector.value = currentVal;
+            }
         } catch (error) {
             console.error('Error loading assessment types:', error);
         }
@@ -754,8 +846,8 @@
             }
         }
 
-        // Current term must be strictly active in the database
-        const activeTerm = terms.find(t => t.is_active);
+        // Current term must be strictly active in the database (using is_current field)
+        const activeTerm = terms.find(t => t.is_current);
         const activeTermBadge = document.getElementById('activeTermBadge');
         const activeTermDates = document.getElementById('activeTermDates');
 
@@ -947,14 +1039,14 @@
                 </td>
                 <td class="px-5 py-4">
                     <span class="text-[9px] font-black px-2 py-0.5 rounded uppercase 
-                        ${term.is_active ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-100 text-slate-400 border border-slate-200'}">
-                        ${term.is_active ? 'Current' : 'Previous'}
+                        ${term.is_current ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-100 text-slate-400 border border-slate-200'}">
+                        ${term.is_current ? 'Current' : 'Previous'}
                     </span>
                 </td>
                 <td class="px-5 py-4 text-right">
                     <div class="flex items-center justify-end gap-2">
                         <button onclick="setCurrentTerm('${term.id}')" 
-                            class="w-8 h-8 flex items-center justify-center rounded-xl transition-all ${term.is_active ? 'bg-blue-500 text-white shadow-lg shadow-blue-200 cursor-default' : 'bg-slate-50 text-slate-400 hover:bg-blue-500 hover:text-white'}"
+                            class="w-8 h-8 flex items-center justify-center rounded-xl transition-all ${term.is_current ? 'bg-blue-500 text-white shadow-lg shadow-blue-200 cursor-default' : 'bg-slate-50 text-slate-400 hover:bg-blue-500 hover:text-white'}"
                             title="Set as Current Term">
                             <i class="fas fa-check text-[10px]"></i>
                         </button>
@@ -998,6 +1090,10 @@
         const year = academicYears.find(y => y.id === id);
         if (year && year.is_active) return;
 
+        if (!confirm(`Are you sure you want to set "${year.name}" as the Current Academic Year?`)) {
+            return;
+        }
+
         try {
             const response = await fetch(`/api/settings/academic-years/${id}/set-current`, {
                 method: 'PUT'
@@ -1016,7 +1112,11 @@
 
     async function setCurrentTerm(id) {
         const term = terms.find(t => t.id === id);
-        if (term && term.is_active) return;
+        if (term && term.is_current) return;
+
+        if (!confirm(`Are you sure you want to set "${term.name}" as the Current Term? This will deactivate all other terms.`)) {
+            return;
+        }
 
         try {
             const response = await fetch(`/api/settings/terms/${id}/set-current`, {
@@ -1148,7 +1248,9 @@
 
             if (response.ok) {
                 hideTermModal();
-                loadAcademicYears();
+                // Show skeletons while reloading
+                document.getElementById('termsList').innerHTML = getTermsSkeleton();
+                await loadAcademicYears();
 
             } else {
                 const error = await response.json();
@@ -1159,6 +1261,22 @@
         } finally {
             setBtnLoading('saveTermBtn', false, 'Save Term');
         }
+    }
+
+    function getTermsSkeleton() {
+        let skeleton = '';
+        for (let i = 0; i < 3; i++) {
+            skeleton += `
+                <tr class="animate-pulse border-b border-slate-50">
+                    <td class="px-5 py-4"><div class="h-3 w-24 bg-slate-100 rounded"></div></td>
+                    <td class="px-5 py-4"><div class="h-3 w-32 bg-slate-100 rounded"></div></td>
+                    <td class="px-5 py-4"><div class="h-3 w-40 bg-slate-100 rounded"></div></td>
+                    <td class="px-5 py-4"><div class="h-5 w-16 bg-slate-100 rounded-lg"></div></td>
+                    <td class="px-5 py-4 text-right"><div class="h-8 w-8 bg-slate-100 rounded-xl ml-auto"></div></td>
+                </tr>
+            `;
+        }
+        return skeleton;
     }
 
     async function saveAssessmentType(e) {
@@ -1260,4 +1378,169 @@
     window.hideTermModal = hideTermModal;
     window.hideAssessmentTypeModal = hideAssessmentTypeModal;
     window.hideDeleteModal = hideDeleteModal;
+
+    function getClassFeeSkeleton() {
+        let skeleton = '';
+        for (let i = 0; i < 3; i++) {
+            skeleton += `
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-4 animate-pulse">
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col gap-2">
+                            <div class="h-2.5 w-24 bg-slate-200 rounded"></div>
+                            <div class="h-2 w-32 bg-slate-200 rounded"></div>
+                        </div>
+                        <div class="h-2 w-8 bg-slate-200 rounded"></div>
+                    </div>
+                    <div class="h-9 w-full bg-slate-200 rounded-lg"></div>
+                </div>
+            `;
+        }
+        return skeleton;
+    }
+
+    // Class Fee Configuration
+    async function loadClassFeeAmounts() {
+        const classID = document.getElementById('classFeeSelector').value;
+        const container = document.getElementById('classFeeAmountsContainer');
+        const actions = document.getElementById('classFeeActions');
+
+        if (!classID) {
+            container.innerHTML = `
+                <div class="col-span-full flex flex-col items-center justify-center py-12 border-2 border-dashed border-slate-100 rounded-2xl bg-slate-50/50">
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm mb-3">
+                        <i class="fas fa-graduation-cap text-slate-300"></i>
+                    </div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Select a class to configure fees</p>
+                </div>
+            `;
+            actions.classList.add('hidden');
+            return;
+        }
+
+        container.innerHTML = getClassFeeSkeleton();
+
+        try {
+            // Get active term
+            const activeTerm = terms.find(t => t.is_active);
+            if (!activeTerm) {
+                container.innerHTML = '<p class="col-span-full text-[10px] font-bold text-rose-500 uppercase tracking-widest text-center py-4">No active term found</p>';
+                return;
+            }
+
+            // Load relevant fee types and current class fees
+            const [typesResp, classFeesResp] = await Promise.all([
+                fetch(`/api/fee-types?class_id=${classID}`),
+                fetch(`/api/fees/class-fees?class_id=${classID}&term_id=${activeTerm.id}`)
+            ]);
+
+            const typesData = await typesResp.json();
+            const classFeesData = await classFeesResp.json();
+
+            const feeTypes = Array.isArray(typesData) ? typesData : (typesData.data || []);
+            const existingFees = classFeesData.success ? (classFeesData.data || []) : [];
+
+            if (feeTypes.length === 0) {
+                container.innerHTML = '<p class="col-span-full text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center py-4">No fee types defined</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            feeTypes.forEach(ft => {
+                const existing = existingFees.find(ef => ef.fee_type_id === ft.id);
+                // Use global default if no class-specific override exists
+                const amount = existing ? existing.amount : (ft.amount || 0);
+                const isRequired = existing ? existing.is_required : (ft.is_required !== false);
+                const globalAmount = ft.amount || 0;
+
+                const div = document.createElement('div');
+                div.className = 'bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-3 relative group transition-all hover:bg-white hover:shadow-md hover:shadow-slate-200/50';
+                div.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-black text-slate-900 uppercase tracking-tight">${ft.name}</span>
+                            <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none mt-1">Global: UGX ${globalAmount.toLocaleString()}</span>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">${ft.code || 'FT'}</span>
+                            <label class="relative inline-flex items-center cursor-pointer scale-[0.6] origin-right">
+                                <input type="checkbox" data-fee-type-id="${ft.id}" class="fee-required-toggle peer sr-only" ${isRequired ? 'checked' : ''}>
+                                <div class="peer h-5 w-9 rounded-full bg-slate-200 after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-slate-900 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-slate-300"></div>
+                                <span class="ml-2 text-[10px] font-black text-slate-400 uppercase tracking-widest peer-checked:text-slate-900">Mandatory</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400">UGX</span>
+                        <input type="number" 
+                            data-fee-type-id="${ft.id}" 
+                            value="${amount}"
+                            step="0.01"
+                            class="class-fee-input w-full bg-white border border-slate-200 text-xs font-bold py-2.5 pl-10 pr-4 rounded-lg focus:ring-4 focus:ring-slate-900/5 focus:border-slate-900 transition-all ${existing ? 'border-slate-300' : ''}"
+                        >
+                    </div>
+                    ${existing ? '<div class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-blue-500 rounded-full border-2 border-white shadow-sm" title="Custom override set"></div>' : ''}
+                `;
+                container.appendChild(div);
+            });
+
+            actions.classList.remove('hidden');
+        } catch (error) {
+            console.error('Error loading class fees:', error);
+            container.innerHTML = '<p class="col-span-full text-[10px] font-bold text-rose-500 uppercase tracking-widest text-center py-4">Failed to load class fees</p>';
+        }
+    }
+
+    async function saveClassFees() {
+        const classID = document.getElementById('classFeeSelector').value;
+        const activeTerm = terms.find(t => t.is_active || t.is_current);
+
+        if (!classID || !activeTerm) return;
+
+        setBtnLoading('saveClassFeesBtn', true, 'Save Class Fees');
+
+        const inputs = document.querySelectorAll('.class-fee-input');
+        const toggles = document.querySelectorAll('.fee-required-toggle');
+        let successCount = 0;
+        let failCount = 0;
+
+        for (const input of inputs) {
+            const feeTypeID = input.dataset.feeTypeId;
+            const amount = input.value;
+            const toggle = Array.from(toggles).find(t => t.dataset.feeTypeId === feeTypeID);
+            const isRequired = toggle ? toggle.checked : true;
+
+            try {
+                const response = await fetch('/api/fees/class-fees', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        class_id: classID,
+                        fee_type_id: feeTypeID,
+                        term_id: activeTerm.id,
+                        amount: amount,
+                        is_required: isRequired
+                    })
+                });
+
+                if (response.ok) successCount++;
+                else failCount++;
+            } catch (error) {
+                console.error('Error saving class fee:', error);
+                failCount++;
+            }
+        }
+
+        setBtnLoading('saveClassFeesBtn', false, 'Save Class Fees');
+
+        if (failCount === 0) {
+            alert('All class fees saved successfully!');
+        } else if (successCount > 0) {
+            alert(`Saved ${successCount} fees, but ${failCount} failed.`);
+        } else {
+            alert('Failed to save class fees.');
+        }
+    }
+
+    window.loadClassFeeAmounts = loadClassFeeAmounts;
+    window.saveClassFees = saveClassFees;
 </script>

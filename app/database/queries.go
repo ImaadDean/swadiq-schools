@@ -3288,3 +3288,41 @@ func GetClassTermAttendanceSummary(db *sql.DB, classID, termID string) ([]map[st
 
 	return summary, nil
 }
+
+// GetClassFees retrieves all default fees for a class in a specific term
+func GetClassFees(db *sql.DB, classID, termID string) ([]*models.ClassFee, error) {
+	query := `SELECT cf.id, cf.class_id, cf.fee_type_id, cf.term_id, cf.amount, cf.is_required, 
+			  ft.name as fee_type_name
+			  FROM class_fees cf
+			  JOIN fee_types ft ON cf.fee_type_id = ft.id
+			  WHERE cf.class_id = $1 AND cf.term_id = $2`
+
+	rows, err := db.Query(query, classID, termID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var fees []*models.ClassFee
+	for rows.Next() {
+		fee := &models.ClassFee{}
+		var feeTypeName string
+		if err := rows.Scan(&fee.ID, &fee.ClassID, &fee.FeeTypeID, &fee.TermID, &fee.Amount, &fee.IsRequired, &feeTypeName); err != nil {
+			return nil, err
+		}
+		fee.FeeType = &models.FeeType{Name: feeTypeName}
+		fees = append(fees, fee)
+	}
+	return fees, nil
+}
+
+// UpsertClassFee sets or updates a default fee amount and requirement status
+func UpsertClassFee(db *sql.DB, classID, feeTypeID, termID string, amount float64, isRequired bool) error {
+	query := `INSERT INTO class_fees (class_id, fee_type_id, term_id, amount, is_required, updated_at)
+			  VALUES ($1, $2, $3, $4, $5, NOW())
+			  ON CONFLICT (class_id, fee_type_id, term_id)
+			  DO UPDATE SET amount = EXCLUDED.amount, is_required = EXCLUDED.is_required, updated_at = NOW()`
+
+	_, err := db.Exec(query, classID, feeTypeID, termID, amount, isRequired)
+	return err
+}

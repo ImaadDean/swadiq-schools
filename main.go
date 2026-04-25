@@ -17,6 +17,7 @@ import (
 	"swadiq-schools/app/routes/fees"
 	"swadiq-schools/app/routes/papers"
 	"swadiq-schools/app/routes/parents"
+	"swadiq-schools/app/routes/reports"
 	"swadiq-schools/app/routes/results"
 	"swadiq-schools/app/routes/settings"
 	"swadiq-schools/app/routes/students"
@@ -207,6 +208,9 @@ func main() {
 
 	// Setup fees routes
 	fees.SetupFeesRoutes(app)
+
+	// Setup reports routes
+	reports.SetupReportsRoutes(app)
 
 	// Catch-all route for 404 errors (must be last)
 	app.Use("*", func(c *fiber.Ctx) error {
